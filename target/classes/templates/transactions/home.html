@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <link rel="stylesheet"
+          th:href="@{/css/bootstrap.min.css}"
+          href="../../css/bootstrap.min.css"/>
+</head>
+<body>
+<div class="container">
+    <div class="navbar">
+        <div class="navbar-inner">
+
+            <ul class="nav">
+                <li>
+                    <a th:href="@{/create}" href="transactionForm.html" class="active">
+                        Добавить транзакцию
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/transactions}" href="transactions.html" class="active">
+                        Транзакции
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/categories}" href="categoryForm.html" class="active">
+                        Категории
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+  <head>
+    <link rel="stylesheet"
+      th:href="@{/css/bootstrap.min.css}"
+      href="../../css/bootstrap.min.css"/>
+    <link rel="stylesheet"
+          href="../../css/style.css"/>
+  </head>
+  <body>
+    <div class="container">
+      <div>
+        <div class="menu">
+
+          <ul>
+            <li>
+              <a th:href="@{/create}" href="transactionForm.html" class="active">
+                Create transaction
+              </a>
+            </li>
+            <li>
+              <a th:href="@{/transactions}" href="transactions.html" class="active">
+                transactions
+              </a>
+            </li>
+            <li>
+              <a th:href="@{/categories}" href="categoryForm.html" class="active">
+                categories
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div layout:fragment="content">
+        Выбери
+      </div>
+    </div>
+    <script src="../../js/main.js"></script>
+  </body>
+</html>
