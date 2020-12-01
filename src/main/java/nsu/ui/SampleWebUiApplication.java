@@ -23,19 +23,21 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 
+import java.sql.SQLException;
+
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan
 public class SampleWebUiApplication {
 
 	@Bean
-	public TransactionRepository transactionRepository() {
-		return new InMemoryMessageRepository();
+	public TransactionRepository transactionRepository() throws SQLException, ClassNotFoundException {
+		return new MySqlRepository();
 	}
 
 	@Bean
-	public CategoryRepository categoryRepository() {
-		return new InMemoryMessageRepository();
+	public CategoryRepository categoryRepository() throws SQLException, ClassNotFoundException {
+		return new MySqlRepository();
 	}
 
 	@Bean
@@ -43,7 +45,12 @@ public class SampleWebUiApplication {
 		return new Converter<String, Transaction>() {
 			@Override
 			public Transaction convert(String id) {
-				return transactionRepository().findTransaction(Long.valueOf(id));
+				try {
+					return transactionRepository().findTransaction(Long.valueOf(id));
+				} catch (SQLException | ClassNotFoundException throwables) {
+					throwables.printStackTrace();
+				}
+				return null;
 			}
 		};
 	}

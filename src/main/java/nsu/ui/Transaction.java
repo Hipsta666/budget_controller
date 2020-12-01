@@ -1,8 +1,13 @@
 package nsu.ui;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 
 import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 
 public class Transaction {
@@ -13,6 +18,18 @@ public class Transaction {
 
     @NotEmpty(message = "Message is required.")
     private String text;
+
+    @NotEmpty(message = "Message is required.")
+    private String date;
+
+    @NotNull
+    private int category_id;
+
+    @NotEmpty(message = "Message is required.")
+    private String trans_name;
+
+    @NotNull
+    private int amount;
 
     private Calendar created = Calendar.getInstance();
 
@@ -46,5 +63,40 @@ public class Transaction {
 
     public void setCreated(Calendar created) {
         this.created = created;
+    }
+
+
+
+    public String getTrans_name() {
+        return trans_name;
+    }
+
+    public void setTrans_name(String trans_name) {
+        this.trans_name = trans_name;
+    }
+
+    public int getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(int category_id) {
+        this.category_id = category_id;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }
