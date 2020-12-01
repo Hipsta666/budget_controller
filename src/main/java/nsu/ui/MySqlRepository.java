@@ -4,9 +4,9 @@ import java.sql.*;
 import java.util.*;
 
 public class MySqlRepository implements TransactionRepository, CategoryRepository{
-    public static final String url = "jdbc:mysql://localhost:3306/expense_controller";
+    public static final String url = "jdbc:mysql://localhost:3306/expense_controller?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     public static final String user = "root";
-    public static final String pwd = "Qazwsxqwerty123";
+    public static final String pwd = "";
     Statement state;
     Connection con;
 
@@ -86,8 +86,25 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     }
 
 
+    @Override
+    public ArrayList<Category> findCategories(){
+        ArrayList<Category> transactions = new ArrayList<Category>();
+        try {
+            state = con.createStatement();
+            ResultSet rsCategory = state.executeQuery("select distinct * from categories;");
 
+            while (rsCategory.next()) {
+                Category category = new Category();
 
+                category.setCategoryName(rsCategory.getString(2));
+
+                transactions.add(category);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return transactions;
+    }
 
     public ArrayList<Transaction> getTransactions(String query){
         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
