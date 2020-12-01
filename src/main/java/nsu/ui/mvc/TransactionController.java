@@ -49,7 +49,6 @@ public class TransactionController {
 		HashMap<String, ArrayList<Transaction>> data = this.transactionRepository.grouping();
 		ArrayList<Integer> sums = this.transactionRepository.getSums();
 		HashMap<String, HashMap<String, ArrayList<Transaction>>> sortedTransactions = new HashMap<>();
-
 		return new ModelAndView("transactions/list", "data", data);
 	}
 

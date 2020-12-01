@@ -1,47 +1,56 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-  layout:decorator="layout">
-  <head>
-    <title>Transactions : View all</title>
-  </head>
-  <body>
-    <h1 layout:fragment="header">Transactions : View all</h1>
-    <div layout:fragment="content" class="container">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+<head>
+  <title>Списки групп</title>
+</head>
+<body>
+<h1 layout:fragment="header">Списки групп</h1>
+<div layout:fragment="content" class="container">
 
+   <p th:if="${data.entrySet().empty}"></p>
 
-      <p th:if="${data.empty}"> No transactions </p>
-      <table class="table table-bordered table-striped" th:each="date : ${data.keySet()}">
+  <table class="table table-bordered table-striped" th:each="date : ${data.entrySet()}">
 
-        <H3 th:text="${date}"></H3>
-<!--        <H3 th:text="${data.get(date)}"></H3>-->
-
-        <tr th:each="trans : ${data.get(date)}">
-
-          <td th:text="{trans.trans_name}">
-          </td>
-
-        </tr>
-
-        <thead>
-          <tr>
-            <td>ID</td>
-            <td>Created</td>
-            <td>Summary</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:if="${data.empty}">
-            <td colspan="3">
-              No transactions
-            </td>
-          </tr>
-
-
-
-
-        </tbody>
-      </table>
+    <div>
+    <H3 th:text="${date.getKey()}"></H3>
+      <H3>Sum of day</H3>
     </div>
-  </body>
+    <thead th:each="trans : ${date.getValue()}">
+    <tr>
+      <td th:text="${trans.category}">
+      </td>
+      <td>
+        Sum of category
+      </td>
+
+    </tr>
+
+    <tr>
+      <td th:text="${trans.trans_name}">
+      </td>
+      <td th:text="${trans.amount}">
+      </td>
+    </tr>
+
+    </thead>
+
+<!--    <tbody>-->
+
+<!--    <tr th:each="trans : ${date.getValue()}">-->
+
+
+<!--      <td th:text="${trans.trans_name}">-->
+<!--      </td>-->
+<!--      <td th:text="${trans.amount}">-->
+<!--      </td>-->
+
+<!--    </tr>-->
+<!--    </tbody>-->
+  </table>
+
+</div>
+
+</body>
 </html>
