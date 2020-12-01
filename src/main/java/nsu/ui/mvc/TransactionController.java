@@ -15,24 +15,19 @@ package nsu.ui.mvc;
 
 import javax.validation.Valid;
 
-import nsu.ui.Category;
-import nsu.ui.CategoryRepository;
 import nsu.ui.Transaction;
 import nsu.ui.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Rob Winch
@@ -50,12 +45,12 @@ public class TransactionController {
 
 	@RequestMapping("/transactions")
 	public ModelAndView list() throws SQLException {
-		Map<String, Object> transactions = new HashMap<String, Object>();
-		HashMap<String, HashMap<String, ArrayList<Transaction>>> data = this.transactionRepository.grouping();
+		Map<Integer, HashMap<String, HashMap<String, ArrayList<Transaction>>>> transactions = new HashMap<>();
+		HashMap<String, ArrayList<Transaction>> data = this.transactionRepository.grouping();
 		ArrayList<Integer> sums = this.transactionRepository.getSums();
-		transactions.put("sums", sums);
-		transactions.put("dates", data.keySet());
-		return new ModelAndView("transactions/list", "transactions", transactions);
+		HashMap<String, HashMap<String, ArrayList<Transaction>>> sortedTransactions = new HashMap<>();
+
+		return new ModelAndView("transactions/list", "data", data);
 	}
 
 

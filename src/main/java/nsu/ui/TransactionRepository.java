@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public interface TransactionRepository {
 
-    HashMap<String, HashMap<String, ArrayList<Transaction>>> grouping() throws SQLException;
+    HashMap<String, ArrayList<Transaction>> grouping() throws SQLException;
 
     ArrayList<Integer> getSums() throws SQLException;
 

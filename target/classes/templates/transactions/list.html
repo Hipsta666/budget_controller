@@ -10,8 +10,23 @@
     <div layout:fragment="content" class="container">
 
 
+      <p th:if="${data.empty}"> No transactions </p>
+      <table class="table table-bordered table-striped" th:each="date : ${data.keySet()}">
 
-      <table class="table table-bordered table-striped">
+        <H3 th:text="${date}"></H3>
+<!--        <H3 th:text="${data.get(date)}"></H3>-->
+
+        <tr th:each="trans : ${data.get(date)}">
+
+          <td th:text="{trans.trans_name}">
+          </td>
+
+        </tr>
+
+<!--        for (Integer sum: data.keySet()) {-->
+<!--        System.out.println(sum);-->
+<!--        System.out.println(data.get(sum));-->
+<!--        }-->
         <thead>
           <tr>
             <td>ID</td>
@@ -20,7 +35,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr th:if="${transactions.empty}">
+          <tr th:if="${data.empty}">
             <td colspan="3">
               No transactions
             </td>
@@ -28,15 +43,7 @@
 
 
 
-          <tr th:each="transaction : ${dates}">
-            <td th:text="${transaction}">1</td>
-            <td th:text="${#calendars.format(transaction.created)}">
-              July 11, 2012 2:17:16 PM CDT
-            </td>
-            <td th:text="${transaction.summary}">
-                The summary
-            </td>
-          </tr>
+
         </tbody>
       </table>
     </div>

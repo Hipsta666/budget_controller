@@ -16,38 +16,43 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     }
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<Transaction>>> grouping() throws SQLException {
+    public HashMap<String, ArrayList<Transaction>> grouping() throws SQLException {
         state = con.createStatement();
         ArrayList<String> dates = getDates("select distinct date from transactions;");
-        ArrayList<Transaction> transactions = getTransactions("select * from transactions;");
-        HashMap<String, HashMap<String, ArrayList<Transaction>>> datesCategory = new HashMap<String, HashMap<String, ArrayList<Transaction>>>();
+        ArrayList<Transaction> transactions = getTransactions("select transactions.id, transactions.date, categories.category_name, transactions.trans_name, transactions.amount from transactions, categories where categories.id = transactions.category_id;");
+        HashMap<String, ArrayList<Transaction>> datesCategory = new HashMap<>();
+        HashMap<String, ArrayList<Transaction>> dateCategory = new HashMap<>();
 
         ResultSet uniqueCategory = state.executeQuery("select distinct transactions.category_id, categories.category_name from transactions, categories where categories.id = transactions.category_id;");
-        HashMap<Integer, String> id_category = new HashMap<Integer, String>();
+        ArrayList<String> id_category = new ArrayList<>();
 
         while (uniqueCategory.next()) {
-            id_category.put(uniqueCategory.getInt(1), uniqueCategory.getString(2));
+            id_category.add(uniqueCategory.getString(2));
         }
 
         for (String date:dates){
-            HashMap<String, ArrayList<Transaction>> categoryTransaction = new HashMap<String, ArrayList<Transaction>>();
-            for (int id:id_category.keySet()){
-                ArrayList<Transaction> transactionByCategory = new ArrayList<Transaction>();
-                String category = "";
+            ArrayList<Transaction> categoryTransaction = new ArrayList<>();
+            for (String category:id_category){
                 for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext();) {
                     Transaction transaction = iterator.next();
-                    if (id == transaction.getCategory_id() && date.equals(transaction.getDate())){
-                        category = id_category.get(id);
-                        transactionByCategory.add(transaction);
+                    if (category.equals(transaction.getCategory()) && date.equals(transaction.getDate())){
+                        categoryTransaction.add(transaction);
                         iterator.remove();
                     }
                 }
-                if (!category.equals("")) categoryTransaction.put(category, transactionByCategory);
             }
-            datesCategory.put(date, categoryTransaction);
-        }
+            dateCategory.put(date, categoryTransaction);
 
-        return datesCategory;
+        }
+        System.out.println(dateCategory);
+        for (String date:dateCategory.keySet()){
+            System.out.println(date);
+            for (Transaction tr:dateCategory.get(date)){
+                System.out.println(tr.getCategory());
+                System.out.println(tr.getTrans_name());
+            }
+        }
+        return dateCategory;
     }
 
 
@@ -99,7 +104,8 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
                 Transaction transaction = new Transaction();
                 transaction.setId(rsTransaction.getLong(1));
                 transaction.setDate(rsTransaction.getString(2));
-                transaction.setCategory_id(rsTransaction.getInt(3));
+                transaction.setCategory(rsTransaction.getString(3));
+
                 transaction.setTrans_name(rsTransaction.getString(4));
                 transaction.setAmount(rsTransaction.getInt(5));
                 transactions.add(transaction);
@@ -107,6 +113,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
         return transactions;
     }
 

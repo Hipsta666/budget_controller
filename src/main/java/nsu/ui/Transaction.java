@@ -23,7 +23,7 @@ public class Transaction {
     private String date;
 
     @NotNull
-    private int category_id;
+    private String category;
 
     @NotEmpty(message = "Message is required.")
     private String trans_name;
@@ -75,13 +75,7 @@ public class Transaction {
         this.trans_name = trans_name;
     }
 
-    public int getCategory_id() {
-        return category_id;
-    }
 
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
-    }
 
     public String getDate() {
         return date;
@@ -98,5 +92,13 @@ public class Transaction {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
