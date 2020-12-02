@@ -4,11 +4,22 @@
       layout:decorator="layout">
 <head>
     <title>Transactions : Create</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet" />
+    <link type="text/css" media="all" rel="stylesheet"
+          th:href="@{/css/default.css}"
+          href="../../css/default.css"/>
+    <link type="text/css" media="all" rel="stylesheet"
+          th:href="@{/css/fonts.css}"
+          href="../../css/fonts.css"/>
 </head>
 <body>
-<h1 layout:fragment="header">Transactions : Create</h1>
+
 <div layout:fragment="content"
      class="container">
+    <h2 layout:fragment="header">Transactions : Create</h2>
     <form id="transactionForm"
           th:action="@{/create}"
           th:object="${transaction}"
@@ -21,6 +32,7 @@
                 Validation error
             </p>
         </div>
+
         <label for="summary">Summary</label>
         <input type="text"
                th:field="*{summary}"
@@ -31,7 +43,7 @@
                 th:class="${#fields.hasErrors('text')} ? 'field-error'"></textarea>
 
         <div class="form-actions">
-            <input type="submit" value="Create"/>
+            <input class="button" type="submit" value="Create"/>
         </div>
 
     </form>

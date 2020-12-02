@@ -68,20 +68,20 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
 
     @Override
     public Category saveCategory(Category category) throws SQLException {
-        String name = "'" + category.getCategoryName() + "'";
+        String name = category.getCategoryName();
         state = con.createStatement();
         boolean categoryExistence = checkDB("categories", "category_name", String.valueOf(name));
         if (!categoryExistence) {
-            state.executeUpdate(String.format("INSERT into `categories`(category_name) VALUES ('%s')", name));
+            state.executeUpdate(String.format("INSERT into `categories`(category_name) VALUES ('%s');", name));
         }
         return category;
     }
 
-
     public boolean checkDB(String dbName, String field, String value) throws SQLException {
         state = con.createStatement();
-        String query = "SELECT EXISTS(SELECT FROM `" + dbName +"` WHERE " + "LOWER(" + field +") = "+ "LOWER(" + value + "));";
-        ResultSet rs = state.executeQuery(query);
+
+        System.out.println(value);
+        ResultSet rs = state.executeQuery(String.format("SELECT EXISTS(SELECT id FROM `%s` WHERE LOWER(%s) = LOWER('%s'));", dbName, field, value));
         while (rs.next()){
             if (rs.getString(1).equals("0")){
                 rs.close();
@@ -90,8 +90,6 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         }
         return true;
     }
-
-
 
     @Override
     public Transaction saveTransaction(Transaction transaction) throws SQLException {

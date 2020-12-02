@@ -1,4 +1,4 @@
-
+/*
 ul {
     list-style-type: none;
     margin: 0;
@@ -23,7 +23,7 @@ li a:hover {
     background-color: white;
     text-decoration: none;
 
-}
+}*/
 
 a.current {
     color: red;

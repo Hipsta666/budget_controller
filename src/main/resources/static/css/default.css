@@ -156,7 +156,7 @@ ul.style1 a:hover
 ul.style2
 {
 	margin: 0;
-	padding-top: 1em;
+	padding-top: 0;
 	list-style: none;
 }
 
@@ -432,7 +432,6 @@ ul.contact li a.icon-rss:before
 {
 	position: absolute;
 	right: 0;
-	top: 1.6em;
 }
 
 #menu ul
@@ -451,7 +450,7 @@ ul.contact li a.icon-rss:before
 {
 	display: inline-block;
 	margin-left: 1px;
-	padding: 1em 1.5em 0em 1.5em;
+	padding: 2.8em 1.5em 2.8em 1.5em;
 	letter-spacing: 0.10em;
 	text-decoration: none;
 	font-size: 1em;
@@ -462,6 +461,7 @@ ul.contact li a.icon-rss:before
 
 #menu li:hover a, #menu li.active a, #menu li.active span
 {
+	background-color: #b3b3b3;
 }
 
 #menu .current_page_item a
@@ -649,7 +649,8 @@ ul.contact li a.icon-rss:before
 
 #featured .main-title h2
 {
-	font-size: 4em;
+	font-size: 3.5em;
+	margin-bottom: 50px;
 }
 
 #featured .main-title .byline
