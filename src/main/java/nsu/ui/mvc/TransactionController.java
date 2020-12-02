@@ -45,11 +45,20 @@ public class TransactionController {
 
 	@RequestMapping("/transactions")
 	public ModelAndView list() throws SQLException {
-		Map<Integer, HashMap<String, HashMap<String, ArrayList<Transaction>>>> transactions = new HashMap<>();
-		HashMap<String, ArrayList<Transaction>> data = this.transactionRepository.grouping();
-		ArrayList<Integer> sums = this.transactionRepository.getSums();
-		HashMap<String, HashMap<String, ArrayList<Transaction>>> sortedTransactions = new HashMap<>();
-		return new ModelAndView("transactions/list", "data", data);
+		HashMap<String, HashMap<String, ArrayList<Transaction>>> dateCategoryMap = this.transactionRepository.grouping();
+		ArrayList<Integer> daySums = this.transactionRepository.getDaySums();
+		HashMap<String, HashMap<String, Integer>> categorySums = this.transactionRepository.getCategorySums();
+		ArrayList<String> dates = this.transactionRepository.getDates();
+
+		ModelAndView mav = new ModelAndView();
+
+		mav.setViewName("transactions/list");
+		mav.addObject("daySums", daySums);
+		mav.addObject("dateCategoryMap", dateCategoryMap);
+		mav.addObject("categorySums", categorySums);
+		mav.addObject("dates", dates);
+
+		return mav;
 	}
 
 

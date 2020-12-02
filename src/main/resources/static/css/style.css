@@ -20,14 +20,12 @@ li a {
 }
 
 li a:hover {
-    background-color: white;
+    background-color: #96bbf0;
     text-decoration: none;
 
 }
 
-a.current {
-    color: red;
 
-    border-bottom: 2px solid #222;
-    padding-bottom: 5px;
+td.boldField{
+    font-weight: bold;
 }

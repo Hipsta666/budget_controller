@@ -3,53 +3,47 @@
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       layout:decorator="layout">
 <head>
-  <title>Списки групп</title>
+    <title>Списки групп</title>
+    <link rel="stylesheet"
+          href="../../css/style.css"/>
 </head>
 <body>
 <h1 layout:fragment="header">Списки групп</h1>
 <div layout:fragment="content" class="container">
 
-   <p th:if="${data.entrySet().empty}"></p>
-
-  <table class="table table-bordered table-striped" th:each="date : ${data.entrySet()}">
-
-    <div>
-    <H3 th:text="${date.getKey()}"></H3>
-      <H3>Sum of day</H3>
-    </div>
-    <thead th:each="trans : ${date.getValue()}">
-    <tr>
-      <td th:text="${trans.category}">
-      </td>
-      <td>
-        Sum of category
-      </td>
-
-    </tr>
-
-    <tr>
-      <td th:text="${trans.trans_name}">
-      </td>
-      <td th:text="${trans.amount}">
-      </td>
-    </tr>
-
-    </thead>
-
-<!--    <tbody>-->
-
-<!--    <tr th:each="trans : ${date.getValue()}">-->
+    <p th:if="${dateCategoryMap.empty}">No transactions</p>
 
 
-<!--      <td th:text="${trans.trans_name}">-->
-<!--      </td>-->
-<!--      <td th:text="${trans.amount}">-->
-<!--      </td>-->
+    <table class="table table-bordered table-striped" th:each="day,iterStat : ${dates}">
+<!--            th:each="day: ${date}"-->
+            <div class="date-sum">
+                <H3 th:text="${day}"></H3>
+                <H3 th:text="${daySums.get(iterStat.index)}"></H3>
+            </div>
 
-<!--    </tr>-->
-<!--    </tbody>-->
-  </table>
+            <div th:each="category : ${dateCategoryMap.get(day).keySet()}" >
+                <tr class="row" th:classappend="${iterStat.odd} ? 'odd-row' : 'even-row'">
+                    <td class="boldField" th:text="${category}">
+                    </td>
 
+                    <td class="boldField" th:text="${categorySums.get(day).get(category)}">
+                    </td>
+                </tr>
+
+                <div th:each="trans : ${dateCategoryMap.get(day).get(category)}">
+                    <tr class="row" th:classappend="${iterStat.odd} ? 'odd-row' : 'even-row'">
+                        <td th:text="${trans.trans_name}">
+                        </td>
+
+                        <td th:text="${trans.amount}">
+                        </td>
+                    </tr>
+                </div>
+            </div>
+
+
+
+    </table>
 </div>
 
 </body>
