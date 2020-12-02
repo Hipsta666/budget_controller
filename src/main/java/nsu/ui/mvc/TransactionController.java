@@ -58,11 +58,16 @@ public class TransactionController {
 		return new ModelAndView("transactions/list", "transactions", transactions);
 	}
 
-
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public String createTransactionForm(@ModelAttribute Transaction transaction) {
-		return "transactions/create";
+	public ModelAndView createTransactionForm(@ModelAttribute Transaction transaction) throws SQLException {
+		ArrayList<Category> categories = this.transactionRepository.findCategories();
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("transactions/create");
+		mav.addObject("categories", categories);
+		System.out.println(categories);
+		return mav;
 	}
+
 
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)

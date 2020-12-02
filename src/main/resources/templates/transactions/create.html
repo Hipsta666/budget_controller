@@ -33,20 +33,36 @@
             </p>
         </div>
 
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date"/>
+
+        <label>Category</label>
+        <select name="category">
+
+            <option th:each="category : ${categories}">
+                <span th:text="${category.categoryName}"></span>
+            </option>
+        </select>
+
+        <label for="trans_name">Name</label>
+        <input type="trans_name"
+               th:field="*{trans_name}"
+               th:class="${#fields.hasErrors('trans_name')} ? 'field-error'"/>
+
         <label for="summary">Summary</label>
-        <input type="text"
+        <input type="number"
                th:field="*{summary}"
                th:class="${#fields.hasErrors('summary')} ? 'field-error'"/>
-        <label for="text">transaction</label>
-        <textarea
-                th:field="*{text}"
-                th:class="${#fields.hasErrors('text')} ? 'field-error'"></textarea>
 
         <div class="form-actions">
             <input class="button" type="submit" value="Create"/>
+            <input class="button" onclick="location.href='/transactions';" type="reset" value="Cancel"/>
         </div>
 
+
     </form>
+
 </div>
+
 </body>
 </html>

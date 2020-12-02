@@ -1,7 +1,9 @@
 package nsu.ui;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 
 public class MySqlRepository implements TransactionRepository, CategoryRepository{
     public static final String url = "jdbc:mysql://localhost:3306/expense_controller?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
@@ -93,7 +95,22 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
 
     @Override
     public Transaction saveTransaction(Transaction transaction) throws SQLException {
-        return new Transaction();
+        String name = transaction.getTrans_name();
+        String date = transaction.getDate();
+        int amount = transaction.getAmount();
+        int id_category = transaction.getCategory_id();
+
+        System.out.println(name);
+        System.out.println(date);
+        System.out.println(amount);
+        System.out.println(id_category);
+
+
+        /*state = con.createStatement();
+        state.executeUpdate(String.format("INSERT into `transactions`(date,category_id,trans_name, amount) VALUES ('%s','%s','%s','%s') WHERE ;", date, id_category, name, amount));
+*/
+        return transaction;
+
     }
 
     @Override
@@ -101,7 +118,17 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         return new Transaction();
     }
 
+    @Override
+    public ArrayList<String> getCategories() throws SQLException {
+        state = con.createStatement();
 
+        ArrayList<String> categories = new ArrayList<>();
+        ResultSet uniqueCategory = state.executeQuery("select distinct transactions.category_id, categories.category_name from transactions, categories where categories.id = transactions.category_id;");
+        while (uniqueCategory.next()) {
+            categories.add(uniqueCategory.getString(2));
+        }
+        return categories;
+    }
 
 
     @Override
