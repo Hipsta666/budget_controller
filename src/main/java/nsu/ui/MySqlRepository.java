@@ -1,7 +1,12 @@
 package nsu.ui;
 
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.Date;
 
 public class MySqlRepository implements TransactionRepository, CategoryRepository{
     public static final String url = "jdbc:mysql://localhost:3306/expense_controller";
@@ -34,7 +39,6 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
 
                         transactionByCategory.add(transaction);
                         iterator.remove();
-                        System.out.println(transaction);
                     }
                 }
                 if (!transactionByCategory.isEmpty()) categoryTransaction.put(category, transactionByCategory);
@@ -132,8 +136,10 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         return categories;
     }
 
+
     @Override
     public ArrayList<String> getDates(){
+
         ArrayList<String> dates = new ArrayList<String>();
         try {
             state = con.createStatement();
@@ -142,6 +148,13 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
             while (rsDates.next()) {
                 dates.add(rsDates.getString(1));
             }
+            dates.sort(new Comparator<String>() {
+                @Override
+                public int compare(String object1, String object2) {
+                    return object2.compareTo(object1);
+                }
+            });
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
