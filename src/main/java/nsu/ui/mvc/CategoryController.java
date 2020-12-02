@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 
@@ -43,7 +44,7 @@ public class CategoryController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView createCategory(@Valid Category category, BindingResult result,
-                                       RedirectAttributes redirect) {
+                                       RedirectAttributes redirect) throws SQLException {
         if (result.hasErrors()) {
             return new ModelAndView("transactions/categories", "formErrors", result.getAllErrors());
         }

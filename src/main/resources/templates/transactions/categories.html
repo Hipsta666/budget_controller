@@ -39,7 +39,7 @@
     <div id="featured-wrapper">
         <div id="featured" class="extra2 margin-btm container">
             <div class="main-title">
-                <h2 layout:fragment="header">Категории</h2><br><br><br>
+                <h2 layout:fragment="header">Категории</h2>
 
                 <form id="categoryForm"
                       th:action="@{/categories}"
@@ -60,8 +60,7 @@
                     <div class="form-actions">
                         <input class="button" type="submit" value="Добавить"/>
                     </div>
-                </form>
-                <br>
+
                 <div class="prokrutka">
                     <p>Продукты</p>
                     <p>Лекармтва</p>
@@ -110,8 +109,8 @@
     </p>
     <div class="prokrutka">
 
-        <p th:each="category : ${#categories}"
-           th:text="${category.getCategoryName}">
+        <p th:each="category : ${categories}"
+           th:text="${category.categoryName}">
 
         </p>
 
