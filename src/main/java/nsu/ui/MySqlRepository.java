@@ -1,12 +1,7 @@
 package nsu.ui;
 
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.Date;
 
 public class MySqlRepository implements TransactionRepository, CategoryRepository{
     public static final String url = "jdbc:mysql://localhost:3306/expense_controller";
@@ -123,6 +118,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         return transactions;
     }
 
+    @Override
     public ArrayList<String> getCategories() throws SQLException {
         state = con.createStatement();
 
@@ -131,8 +127,6 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         while (uniqueCategory.next()) {
             categories.add(uniqueCategory.getString(2));
         }
-        
-
         return categories;
     }
 

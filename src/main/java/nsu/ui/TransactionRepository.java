@@ -16,5 +16,7 @@ public interface TransactionRepository {
 
     Transaction findTransaction(Long id);
 
+    ArrayList<String> getCategories() throws SQLException;
+
     ArrayList<String> getDates();
 }

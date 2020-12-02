@@ -50,7 +50,9 @@ public class TransactionController {
 		HashMap<String, HashMap<String, Integer>> categorySums = this.transactionRepository.getCategorySums();
 		ArrayList<String> dates = this.transactionRepository.getDates();
 
+
 		ModelAndView mav = new ModelAndView();
+
 
 		mav.setViewName("transactions/list");
 		mav.addObject("daySums", daySums);
