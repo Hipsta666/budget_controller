@@ -61,10 +61,12 @@ public class TransactionController {
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView createTransactionForm(@ModelAttribute Transaction transaction) throws SQLException {
 		ArrayList<Category> categories = this.transactionRepository.findCategories();
+		for (Category cat:categories){
+			System.out.println(cat.getId());
+		}
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("transactions/create");
 		mav.addObject("categories", categories);
-		System.out.println(categories);
 		return mav;
 	}
 
@@ -75,8 +77,14 @@ public class TransactionController {
 			RedirectAttributes redirect) throws SQLException {
 
 		if (result.hasErrors()) {
-			return new ModelAndView("transactions/create", "formErrors", result.getAllErrors());
+			ArrayList<Category> categories = this.transactionRepository.findCategories();
+			ModelAndView mav = new ModelAndView();
+			mav.setViewName("transactions/create");
+			mav.addObject("categories", categories);
+			mav.addObject("formErrors", result.getAllErrors());
+			return mav;
 		}
+
 		this.transactionRepository.saveTransaction(transaction);
 
 		return new ModelAndView("redirect:/transactions");

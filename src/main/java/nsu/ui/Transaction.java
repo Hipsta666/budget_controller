@@ -13,17 +13,11 @@ import javax.validation.constraints.NotNull;
 public class Transaction {
     private Long id;
 
-    @NotEmpty(message = "Summary is required.")
-    private String summary;
-
-    @NotEmpty(message = "Text is required.")
-    private String text;
-
     @NotEmpty(message = "Date is required.")
     private String date;
 
     @NotNull
-    private int category_id;
+    private Long category_id;
 
     @NotEmpty(message = "Name is required.")
     private String trans_name;
@@ -41,22 +35,6 @@ public class Transaction {
         this.id = id;
     }
 
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
     public Calendar getCreated() {
         return created;
     }
@@ -64,8 +42,6 @@ public class Transaction {
     public void setCreated(Calendar created) {
         this.created = created;
     }
-
-
 
     public String getTrans_name() {
         return trans_name;
@@ -75,11 +51,11 @@ public class Transaction {
         this.trans_name = trans_name;
     }
 
-    public int getCategory_id() {
+    public Long getCategory_id() {
         return category_id;
     }
 
-    public void setCategory_id(int category_id) {
+    public void setCategory_id(Long category_id) {
         this.category_id = category_id;
     }
 
@@ -90,7 +66,6 @@ public class Transaction {
     public void setDate(String date) {
         this.date = date;
     }
-
 
     public int getAmount() {
         return amount;

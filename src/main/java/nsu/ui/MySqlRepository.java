@@ -6,9 +6,9 @@ import java.util.*;
 import java.util.Date;
 
 public class MySqlRepository implements TransactionRepository, CategoryRepository{
-    public static final String url = "jdbc:mysql://localhost:3306/expense_controller?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    public static final String url = "jdbc:mysql://localhost:3306/expense_controller";
     public static final String user = "root";
-    public static final String pwd = "";
+    public static final String pwd = "Qazwsxqwerty123";
     Statement state;
     Connection con;
 
@@ -98,12 +98,11 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         String name = transaction.getTrans_name();
         String date = transaction.getDate();
         int amount = transaction.getAmount();
-        int id_category = transaction.getCategory_id();
-
-        System.out.println(name);
+        Long id_category = transaction.getCategory_id();
         System.out.println(date);
-        System.out.println(amount);
+        System.out.println(name);
         System.out.println(id_category);
+        System.out.println(amount);
 
 
         /*state = con.createStatement();
@@ -142,6 +141,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
                 Category category = new Category();
 
                 category.setCategoryName(rsCategory.getString(2));
+                category.setId(rsCategory.getInt(1));
 
                 transactions.add(category);
             }
@@ -161,7 +161,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
                 Transaction transaction = new Transaction();
                 transaction.setId(rsTransaction.getLong(1));
                 transaction.setDate(rsTransaction.getString(2));
-                transaction.setCategory_id(rsTransaction.getInt(3));
+                transaction.setCategory_id(rsTransaction.getLong(3));
                 transaction.setTrans_name(rsTransaction.getString(4));
                 transaction.setAmount(rsTransaction.getInt(5));
                 transactions.add(transaction);

@@ -2,19 +2,22 @@ package nsu.ui;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import java.util.Calendar;
 
 public class Category {
-    private Long id;
+
+    @NotNull
+    private int id;
 
     @NotEmpty(message = "Category name is required.")
     private String categoryName;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

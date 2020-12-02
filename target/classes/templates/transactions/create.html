@@ -34,25 +34,29 @@
         </div>
 
         <label for="date">Date</label>
-        <input type="date" id="date" name="date"/>
+        <input type="date" id="date" name="date"
+               th:field="*{date}"
+               th:class="${#fields.hasErrors('date')} ? 'field-error'"/>
 
         <label>Category</label>
-        <select name="category">
-
-            <option th:each="category : ${categories}">
-                <span th:text="${category.categoryName}"></span>
+        <select>
+            <option value="1">Select Category</option>
+            <option th:each="category : ${categories}" th:text="${category.categoryName}" th:value="${category.id}"
+            >
+<!--                <span th:text="${category}"></span>-->
             </option>
         </select>
 
         <label for="trans_name">Name</label>
-        <input type="trans_name"
+        <input type="text"
                th:field="*{trans_name}"
                th:class="${#fields.hasErrors('trans_name')} ? 'field-error'"/>
 
-        <label for="summary">Summary</label>
+        <label for="amount">Amount</label>
         <input type="number"
-               th:field="*{summary}"
-               th:class="${#fields.hasErrors('summary')} ? 'field-error'"/>
+
+               th:field="*{amount}"
+               th:class="${#fields.hasErrors('amount')} ? 'field-error'"/>
 
         <div class="form-actions">
             <input class="button" type="submit" value="Create"/>
