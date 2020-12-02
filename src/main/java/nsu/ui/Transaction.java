@@ -11,18 +11,19 @@ import javax.validation.constraints.NotNull;
 
 
 public class Transaction {
+
     private Long id;
 
     @NotEmpty(message = "Date is required.")
     private String date;
 
-    @NotNull
+    @NotNull(message = "Category is required.")
     private Long category_id;
 
     @NotEmpty(message = "Name is required.")
     private String trans_name;
 
-    @NotNull
+    @NotNull(message = "amount is required.")
     private int amount;
 
     private Calendar created = Calendar.getInstance();

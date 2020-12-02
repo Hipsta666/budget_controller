@@ -99,17 +99,10 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         String date = transaction.getDate();
         int amount = transaction.getAmount();
         Long id_category = transaction.getCategory_id();
-        System.out.println(date);
-        System.out.println(name);
-        System.out.println(id_category);
-        System.out.println(amount);
 
-
-        /*state = con.createStatement();
-        state.executeUpdate(String.format("INSERT into `transactions`(date,category_id,trans_name, amount) VALUES ('%s','%s','%s','%s') WHERE ;", date, id_category, name, amount));
-*/
+        state = con.createStatement();
+        state.executeUpdate(String.format("INSERT into transactions (date,category_id,trans_name, amount) VALUES ('%s','%s','%s','%s');", date, id_category, name, amount));
         return transaction;
-
     }
 
     @Override

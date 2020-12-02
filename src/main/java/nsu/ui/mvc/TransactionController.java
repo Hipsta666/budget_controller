@@ -61,9 +61,6 @@ public class TransactionController {
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView createTransactionForm(@ModelAttribute Transaction transaction) throws SQLException {
 		ArrayList<Category> categories = this.transactionRepository.findCategories();
-		for (Category cat:categories){
-			System.out.println(cat.getId());
-		}
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("transactions/create");
 		mav.addObject("categories", categories);

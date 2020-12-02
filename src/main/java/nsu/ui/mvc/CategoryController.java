@@ -37,7 +37,6 @@ public class CategoryController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView createCategoryForm(@ModelAttribute Category category) {
         ArrayList<Category> categories = this.categoryRepository.findCategories();
-        System.out.println(categories);
         return new ModelAndView("transactions/categories", "categories", categories);
         /*return "transactions/categories";*/
     } /*,"categories"  */

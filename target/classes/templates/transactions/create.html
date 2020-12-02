@@ -34,15 +34,14 @@
         </div>
 
         <label for="date">Date</label>
-        <input type="date" id="date" name="date"
+        <input type="date" id="date" name="date" max="2020-12-03"
                th:field="*{date}"
                th:class="${#fields.hasErrors('date')} ? 'field-error'"/>
 
         <label>Category</label>
-        <select>
-            <option value="1">Select Category</option>
-            <option th:each="category : ${categories}" th:text="${category.categoryName}" th:value="${category.id}"
-            >
+        <select th:field="*{category_id}" th:class="${#fields.hasErrors('category_id')} ? 'field-error'">
+            <option value="">Select Category</option>
+            <option th:each="category : ${categories}" th:text="${category.categoryName}" th:value="${category.id}">
 <!--                <span th:text="${category}"></span>-->
             </option>
         </select>
