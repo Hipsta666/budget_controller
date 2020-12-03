@@ -20,23 +20,24 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         state = con.createStatement();
         ArrayList<String> dates = getDates();
         ArrayList<Transaction> transactions = getTransactions();
-        ArrayList<String> categories = getCategories();
+
+        HashMap<Long, String> categories = getCategories();
         HashMap<String, HashMap<String, ArrayList<Transaction>>> datesCategory = new HashMap<String, HashMap<String, ArrayList<Transaction>>>();
 
 
         for (String date:dates){
             HashMap<String, ArrayList<Transaction>> categoryTransaction = new HashMap<String, ArrayList<Transaction>>();
-            for (String category :categories){
+            for (Long id :categories.keySet()){
                 ArrayList<Transaction> transactionByCategory = new ArrayList<Transaction>();
                 for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext();) {
                     Transaction transaction = iterator.next();
-                    if (category.equals(transaction.getCategory()) && date.equals(transaction.getDate())){
+                    if (id.equals(transaction.getCategory_id()) && date.equals(transaction.getDate())){
 
                         transactionByCategory.add(transaction);
                         iterator.remove();
                     }
                 }
-                if (!transactionByCategory.isEmpty()) categoryTransaction.put(category, transactionByCategory);
+                if (!transactionByCategory.isEmpty()) categoryTransaction.put(categories.get(id), transactionByCategory);
             }
             datesCategory.put(date, categoryTransaction);
         }
@@ -63,15 +64,16 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     public HashMap<String, HashMap<String, Integer>> getCategorySums() throws SQLException {
         state = con.createStatement();
 
-        ArrayList<String> categories = getCategories();
+
+        HashMap<Long, String> categories = getCategories();
         HashMap<String, HashMap<String, Integer>> categorySums = new HashMap<>();
         for (String date:getDates()){
             HashMap<String, Integer> sums = new HashMap<>();
-            for (String category:categories){
+            for (Long id:categories.keySet()){
 
-                ResultSet sum = state.executeQuery("select sum(transactions.amount) from transactions, categories where categories.id = transactions.category_id and transactions.date = '" + date + "' and categories.category_name='" + category + "';");
+                ResultSet sum = state.executeQuery("select sum(transactions.amount) from transactions, categories where categories.id = transactions.category_id and transactions.date = '" + date + "' and categories.category_name='" + categories.get(id) + "';");
                 while (sum.next()) {
-                    if (sum.getInt(1) != 0) sums.put(category, sum.getInt(1));
+                    if (sum.getInt(1) != 0) sums.put(categories.get(id), sum.getInt(1));
                 }
 
             }
@@ -81,10 +83,40 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         return categorySums;
     }
     
+    @Override
+    public Category saveCategory(Category category) throws SQLException {
+        String name = category.getCategoryName();
+        state = con.createStatement();
+        boolean categoryExistence = checkDB("categories", "category_name", String.valueOf(name));
+        if (!categoryExistence) {
+            state.executeUpdate(String.format("INSERT into `categories`(category_name) VALUES ('%s');", name));
+        }
+        return category;
+    }
+
+    public boolean checkDB(String dbName, String field, String value) throws SQLException {
+        state = con.createStatement();
+
+        ResultSet rs = state.executeQuery(String.format("SELECT EXISTS(SELECT id FROM `%s` WHERE LOWER(%s) = LOWER('%s'));", dbName, field, value));
+        while (rs.next()){
+            if (rs.getString(1).equals("0")){
+                rs.close();
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     @Override
-    public Transaction saveTransaction(Transaction transaction) throws SQLException {
-        return new Transaction();
+    public void saveTransaction(Transaction transaction) throws SQLException {
+        String name = transaction.getTrans_name();
+        String date = transaction.getDate();
+        int amount = transaction.getAmount();
+        Long id_category = transaction.getCategory_id();
+
+        state = con.createStatement();
+        state.executeUpdate(String.format("INSERT into transactions (date,category_id,trans_name, amount) VALUES ('%s','%s','%s','%s');", date, id_category, name, amount));
     }
 
     @Override
@@ -93,24 +125,31 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     }
 
     @Override
-    public Category saveCategory(Category category) {
-        return null;
+    public HashMap<Long, String> getCategories() throws SQLException {
+        state = con.createStatement();
+
+        HashMap<Long, String> categories = new HashMap<>();
+        ResultSet uniqueCategory = state.executeQuery("select distinct transactions.category_id, categories.category_name from transactions, categories where categories.id = transactions.category_id;");
+        while (uniqueCategory.next()) {
+            categories.put(uniqueCategory.getLong(1), uniqueCategory.getString(2));
+        }
+        return categories;
     }
 
-
-    public ArrayList<Transaction> getTransactions(){
-        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+    @Override
+    public ArrayList<Category> findCategories(){
+        ArrayList<Category> transactions = new ArrayList<Category>();
         try {
             state = con.createStatement();
-            ResultSet rsTransaction = state.executeQuery("select transactions.id, transactions.date, categories.category_name, transactions.trans_name, transactions.amount from transactions, categories where categories.id = transactions.category_id;");
-            while (rsTransaction.next()) {
-                Transaction transaction = new Transaction();
-                transaction.setId(rsTransaction.getLong(1));
-                transaction.setDate(rsTransaction.getString(2));
-                transaction.setCategory(rsTransaction.getString(3));
-                transaction.setTrans_name(rsTransaction.getString(4));
-                transaction.setAmount(rsTransaction.getInt(5));
-                transactions.add(transaction);
+            ResultSet rsCategory = state.executeQuery("select distinct * from categories;");
+
+            while (rsCategory.next()) {
+                Category category = new Category();
+
+                category.setCategoryName(rsCategory.getString(2));
+                category.setId(rsCategory.getInt(1));
+
+                transactions.add(category);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -118,17 +157,31 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         return transactions;
     }
 
-    @Override
-    public ArrayList<String> getCategories() throws SQLException {
-        state = con.createStatement();
 
-        ArrayList<String> categories = new ArrayList<>();
-        ResultSet uniqueCategory = state.executeQuery("select distinct transactions.category_id, categories.category_name from transactions, categories where categories.id = transactions.category_id;");
-        while (uniqueCategory.next()) {
-            categories.add(uniqueCategory.getString(2));
+    public ArrayList<Transaction> getTransactions(){
+
+        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+        try {
+            state = con.createStatement();
+            ResultSet rsTransaction = state.executeQuery("select transactions.id, transactions.date, transactions.category_id, transactions.trans_name, transactions.amount from transactions, categories where categories.id = transactions.category_id;");
+            while (rsTransaction.next()) {
+                Transaction transaction = new Transaction();
+                transaction.setId(rsTransaction.getLong(1));
+                transaction.setDate(rsTransaction.getString(2));
+                transaction.setCategory_id(rsTransaction.getLong(3));
+//                transaction.setCategory_id(rsTransaction.getLong(3));
+
+                transaction.setTrans_name(rsTransaction.getString(4));
+                transaction.setAmount(rsTransaction.getInt(5));
+                transactions.add(transaction);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-        return categories;
+
+        return transactions;
     }
+
 
 
     @Override

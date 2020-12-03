@@ -3,47 +3,63 @@
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       layout:decorator="layout">
 <head>
-    <title>Списки групп</title>
+
+        <title>Transactions : Create</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="keywords" content="" />
+        <meta name="description" content="" />
+        <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet" />
+        <link type="text/css" media="all" rel="stylesheet"
+              th:href="@{/css/default.css}"
+              href="../../css/default.css"/>
+        <link type="text/css" media="all" rel="stylesheet"
+              th:href="@{/css/fonts.css}"
+              href="../../css/fonts.css"/>
+
+
     <link rel="stylesheet"
           href="../../css/style.css"/>
 </head>
 <body>
-<h1 layout:fragment="header">Списки групп</h1>
-<div layout:fragment="content" class="container">
+<div layout:fragment="content">
+    <div class="container">
 
     <p th:if="${dateCategoryMap.empty}">No transactions</p>
 
 
     <table class="table table-bordered table-striped" th:each="day,iterStat : ${dates}">
-<!--            th:each="day: ${date}"-->
-            <div class="date-sum">
-                <H3 th:text="${day}"></H3>
-                <H3 th:text="${daySums.get(iterStat.index)}"></H3>
-            </div>
+        <!--            th:each="day: ${date}"-->
+        <div class="date-sum">
+            <H3 th:text="${day}" style="float: left"></H3>
+            <H3 th:text="${daySums.get(iterStat.index)}" style="float: right"></H3>
+        </div>
 
-            <div th:each="category : ${dateCategoryMap.get(day).keySet()}" >
+        <div th:each="category : ${dateCategoryMap.get(day).keySet()}" >
+            <tr class="row" th:classappend="${iterStat.odd} ? 'odd-row' : 'even-row'">
+                <td class="boldField" th:text="${category}">
+                </td>
+
+                <td class="boldField" th:text="${categorySums.get(day).get(category)}">
+                    rub
+                </td>
+            </tr>
+
+            <div th:each="trans : ${dateCategoryMap.get(day).get(category)}">
                 <tr class="row" th:classappend="${iterStat.odd} ? 'odd-row' : 'even-row'">
-                    <td class="boldField" th:text="${category}">
+                    <td th:text="${trans.trans_name}">
                     </td>
 
-                    <td class="boldField" th:text="${categorySums.get(day).get(category)}">
+                    <td th:text="${trans.amount}">
+                        rub
                     </td>
                 </tr>
-
-                <div th:each="trans : ${dateCategoryMap.get(day).get(category)}">
-                    <tr class="row" th:classappend="${iterStat.odd} ? 'odd-row' : 'even-row'">
-                        <td th:text="${trans.trans_name}">
-                        </td>
-
-                        <td th:text="${trans.amount}">
-                        </td>
-                    </tr>
-                </div>
             </div>
+        </div>
 
 
 
     </table>
+    </div>
 </div>
 
 </body>

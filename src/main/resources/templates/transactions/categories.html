@@ -4,11 +4,25 @@
       layout:decorator="layout">
 <head>
     <title>Transactions : Create</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet" />
+    <link type="text/css" media="all" rel="stylesheet"
+          th:href="@{/css/default.css}"
+          href="../../css/default.css"/>
+    <link type="text/css" media="all" rel="stylesheet"
+          th:href="@{/css/fonts.css}"
+          href="../../css/fonts.css"/>
+    <!--[if IE 6]><link href="default_ie6.css" rel="stylesheet" type="text/css" /><![endif]-->
+
+
 </head>
 <body>
-<h1 layout:fragment="header">Transactions : Create</h1>
+
 <div layout:fragment="content"
      class="container">
+    <h2 layout:fragment="header">Categories</h2>
     <form id="categories"
           th:action="@{/categories}"
           th:object="${category}"
@@ -22,18 +36,26 @@
             </p>
         </div>
 
-        <label for="summary">Summary</label>
+        <label for="categoryName">Category name</label>
         <input type="text"
-               th:field="*{summary}"
-               th:class="${#fields.hasErrors('summary')} ? 'field-error'"/>
-        <label for="text">transaction</label>
-        <textarea
-                th:field="*{text}"
-                th:class="${#fields.hasErrors('text')} ? 'field-error'"></textarea>
+               th:field="*{categoryName}"
+               th:class="${#fields.hasErrors('categoryName')} ? 'field-error'"/>
         <div class="form-actions">
-            <input type="submit" value="Create"/>
+            <input class="button" type="submit" value="Create"/>
         </div>
     </form>
+
+    <div class="prokrutka">
+
+        <p th:each="category : ${categories}"
+           th:text="${category.categoryName}">
+
+        </p>
+
+
+    </div>
+
 </div>
+
 </body>
 </html>

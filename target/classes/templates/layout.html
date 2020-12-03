@@ -8,32 +8,52 @@
           href="../../css/style.css"/>
   </head>
   <body>
-    <div class="container">
-      <div>
-        <div class="menu">
+    <div>
 
-          <ul>
-            <li>
-              <a th:href="@{/create}" href="transactionForm.html" class="active">
-                Create transaction
-              </a>
-            </li>
-            <li>
-              <a th:href="@{/transactions}" href="transactions.html" class="active">
-                transactions
-              </a>
-            </li>
-            <li>
-              <a th:href="@{/categories}" href="categoryForm.html" class="active">
-                categories
-              </a>
-            </li>
-          </ul>
+      <div id="header-wrapper">
+        <div id="header" class="container">
+          <div id="logo">
+            <h1><a href="https://nsu.ru">NSU</a></h1>
+          </div>
+          <div id="menu">
+            <ul>
+
+              <li>
+                <a th:href="@{/create}" href="transactionForm.html" class="active">
+                  Create transaction
+                </a>
+              </li>
+              <li>
+                <a th:href="@{/transactions}" href="transactions.html" class="active">
+                  transactions
+                </a>
+              </li>
+              <li>
+                <a th:href="@{/categories}" href="categoryForm.html" class="active">
+                  categories
+                </a>
+              </li>
+
+            </ul>
+          </div>
         </div>
       </div>
-      <div layout:fragment="content">
-        Choose
-      </div>
-    </div>
-  </body>
-</html>
+
+
+            <div id="wrapper">
+              <div id="featured-wrapper">
+                <div id="featured" class="extra2 margin-btm container">
+                  <div layout:fragment="content" class="main-title">
+                    Choose
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="copyright" class="container">
+              <p>&copy; 18704 | Ovechkin A., Komarova E., Matuhina E., Grigorev A.</p>
+            </div>
+
+
+          </div>
+        </body>
+      </html>

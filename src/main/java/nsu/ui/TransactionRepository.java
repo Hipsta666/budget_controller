@@ -12,11 +12,14 @@ public interface TransactionRepository {
 
     HashMap<String, HashMap<String, Integer>> getCategorySums() throws SQLException;
 
-    Transaction saveTransaction(Transaction transaction) throws SQLException;
+    void saveTransaction(Transaction transaction) throws SQLException;
 
     Transaction findTransaction(Long id);
 
-    ArrayList<String> getCategories() throws SQLException;
+    HashMap<Long, String> getCategories() throws SQLException;
+
+    ArrayList<Category> findCategories();
 
     ArrayList<String> getDates();
+
 }

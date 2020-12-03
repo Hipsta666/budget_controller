@@ -15,6 +15,7 @@ package nsu.ui.mvc;
 
 import javax.validation.Valid;
 
+import nsu.ui.Category;
 import nsu.ui.Transaction;
 import nsu.ui.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,11 +64,15 @@ public class TransactionController {
 		return mav;
 	}
 
-
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public String createTransactionForm(@ModelAttribute Transaction transaction) {
-		return "transactions/create";
+	public ModelAndView createTransactionForm(@ModelAttribute Transaction transaction) throws SQLException {
+		ArrayList<Category> categories = this.transactionRepository.findCategories();
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("transactions/create");
+		mav.addObject("categories", categories);
+		return mav;
 	}
+
 
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
@@ -75,8 +80,16 @@ public class TransactionController {
 			RedirectAttributes redirect) throws SQLException {
 
 		if (result.hasErrors()) {
-			return new ModelAndView("transactions/create", "formErrors", result.getAllErrors());
+			ArrayList<Category> categories = this.transactionRepository.findCategories();
+			ModelAndView mav = new ModelAndView();
+			mav.setViewName("transactions/create");
+			mav.addObject("categories", categories);
+			mav.addObject("formErrors", result.getAllErrors());
+			return mav;
 		}
+		String[] date = transaction.getDate().split("-");
+		String reversDate = date[2] + "-" + date[1] + "-" +  date[0];
+		transaction.setDate(reversDate);
 		this.transactionRepository.saveTransaction(transaction);
 
 		return new ModelAndView("redirect:/transactions");

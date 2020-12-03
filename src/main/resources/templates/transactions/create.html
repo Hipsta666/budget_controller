@@ -4,11 +4,22 @@
       layout:decorator="layout">
 <head>
     <title>Transactions : Create</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet" />
+    <link type="text/css" media="all" rel="stylesheet"
+          th:href="@{/css/default.css}"
+          href="../../css/default.css"/>
+    <link type="text/css" media="all" rel="stylesheet"
+          th:href="@{/css/fonts.css}"
+          href="../../css/fonts.css"/>
 </head>
 <body>
-<h1 layout:fragment="header">Transactions : Create</h1>
+
 <div layout:fragment="content"
      class="container">
+    <h2 layout:fragment="header">Transactions : Create</h2>
     <form id="transactionForm"
           th:action="@{/create}"
           th:object="${transaction}"
@@ -21,20 +32,40 @@
                 Validation error
             </p>
         </div>
-        <label for="summary">Summary</label>
+
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" max="2020-12-03"
+               th:field="*{date}"
+               th:class="${#fields.hasErrors('date')} ? 'field-error'"/>
+
+        <label>Category</label>
+        <select th:field="*{category_id}" th:class="${#fields.hasErrors('category_id')} ? 'field-error'">
+            <option value="">Select Category</option>
+            <option th:each="category : ${categories}" th:text="${category.categoryName}" th:value="${category.id}">
+<!--                <span th:text="${category}"></span>-->
+            </option>
+        </select>
+
+        <label for="trans_name">Name</label>
         <input type="text"
-               th:field="*{summary}"
-               th:class="${#fields.hasErrors('summary')} ? 'field-error'"/>
-        <label for="text">transaction</label>
-        <textarea
-                th:field="*{text}"
-                th:class="${#fields.hasErrors('text')} ? 'field-error'"></textarea>
+               th:field="*{trans_name}"
+               th:class="${#fields.hasErrors('trans_name')} ? 'field-error'"/>
+
+        <label for="amount">Amount</label>
+        <input type="number"
+
+               th:field="*{amount}"
+               th:class="${#fields.hasErrors('amount')} ? 'field-error'"/>
 
         <div class="form-actions">
-            <input type="submit" value="Create"/>
+            <input class="button" type="submit" value="Create"/>
+            <input class="button" onclick="location.href='/transactions';" type="reset" value="Cancel"/>
         </div>
 
+
     </form>
+
 </div>
+
 </body>
 </html>

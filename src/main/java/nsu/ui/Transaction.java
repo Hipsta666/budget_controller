@@ -11,27 +11,24 @@ import javax.validation.constraints.NotNull;
 
 
 public class Transaction {
+
     private Long id;
 
-    @NotEmpty(message = "Summary is required.")
-    private String summary;
-
-    @NotEmpty(message = "Message is required.")
-    private String text;
-
-    @NotEmpty(message = "Message is required.")
+    @NotEmpty(message = "Date is required.")
     private String date;
 
-    @NotNull
-    private String category;
+//    @NotEmpty(message = "cat is required.")
+//    private String category;
 
-    @NotEmpty(message = "Message is required.")
+    @NotNull(message = "Category is required.")
+    private Long category_id;
+
+    @NotEmpty(message = "Name is required.")
     private String trans_name;
 
-    @NotNull
+    @NotNull(message = "amount is required.")
     private int amount;
 
-    private Calendar created = Calendar.getInstance();
 
     public Long getId() {
         return id;
@@ -40,31 +37,6 @@ public class Transaction {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Calendar getCreated() {
-        return created;
-    }
-
-    public void setCreated(Calendar created) {
-        this.created = created;
-    }
-
 
 
     public String getTrans_name() {
@@ -76,6 +48,14 @@ public class Transaction {
     }
 
 
+    public Long getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(Long category_id) {
+        this.category_id = category_id;
+    }
+
 
     public String getDate() {
         return date;
@@ -85,7 +65,6 @@ public class Transaction {
         this.date = date;
     }
 
-
     public int getAmount() {
         return amount;
     }
@@ -94,11 +73,11 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
+//    public String getCategory() {
+//        return category;
+//    }
+//
+//    public void setCategory(String category) {
+//        this.category = category;
+//    }
 }

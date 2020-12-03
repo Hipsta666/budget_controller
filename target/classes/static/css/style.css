@@ -1,4 +1,4 @@
-
+/*
 ul {
     list-style-type: none;
     margin: 0;
@@ -23,9 +23,13 @@ li a:hover {
     background-color: #96bbf0;
     text-decoration: none;
 
-}
+}*/
 
 
 td.boldField{
     font-weight: bold;
 }
+.container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
+    width: 900px;
+}
+
