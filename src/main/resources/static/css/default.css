@@ -53,7 +53,7 @@ a:hover
 	text-decoration: none;
 }
 
-.container
+.container2
 {
 	margin: 0px auto;
 	width: 1200px;
@@ -306,7 +306,7 @@ ul.contact li a.icon-rss:before
 {
 	display: inline-block;
 	padding: 1.3em 3em;
-	background: #8dc63f;
+	background: #a0c4f6;
 	-moz-transition: opacity 0.25s ease-in-out;
 	-webkit-transition: opacity 0.25s ease-in-out;
 	-o-transition: opacity 0.25s ease-in-out;
@@ -321,7 +321,17 @@ ul.contact li a.icon-rss:before
 
 .button:hover
 {
-	background: #86bd3b;
+	background: #75a5e8;
+}
+
+#cancel
+{
+	background: #cccccc;
+}
+
+#cancel:hover
+{
+	background: #a0a0a0;
 }
 
 .button:active

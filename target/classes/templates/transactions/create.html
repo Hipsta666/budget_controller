@@ -58,8 +58,8 @@
                th:class="${#fields.hasErrors('amount')} ? 'field-error'"/>
 
         <div class="form-actions">
+            <input class="button" id="cancel" onclick="location.href='/transactions';" type="reset" value="Cancel"/>
             <input class="button" type="submit" value="Create"/>
-            <input class="button" onclick="location.href='/transactions';" type="reset" value="Cancel"/>
         </div>
 
 

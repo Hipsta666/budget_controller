@@ -4,9 +4,10 @@ import java.sql.*;
 import java.util.*;
 
 public class MySqlRepository implements TransactionRepository, CategoryRepository{
-    public static final String url = "jdbc:mysql://localhost:3306/expense_controller";
+    public static final String url = "jdbc:mysql://localhost:3306/expense_controller?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     public static final String user = "root";
-    public static final String pwd = "Qazwsxqwerty123";
+    public static final String pwd = "";
+
     Statement state;
     Connection con;
 
@@ -73,7 +74,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
 
                 ResultSet sum = state.executeQuery("select sum(transactions.amount) from transactions, categories where categories.id = transactions.category_id and transactions.date = '" + date + "' and categories.category_name='" + categories.get(id) + "';");
                 while (sum.next()) {
-                    if (sum.getInt(1) != 0) sums.put(categories.get(id), sum.getInt(1));
+                    sums.put(categories.get(id), sum.getInt(1));
                 }
 
             }

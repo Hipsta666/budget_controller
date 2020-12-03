@@ -23,6 +23,8 @@
 <body>
 <div layout:fragment="content">
     <div class="container">
+        <h2 layout:fragment="header">Transactions : View all</h2>
+        <div style="width: 500px; padding-left: 23%">
 
     <p th:if="${dateCategoryMap.empty}">No transactions</p>
 
@@ -31,7 +33,7 @@
         <!--            th:each="day: ${date}"-->
         <div class="date-sum">
             <H3 th:text="${day}" style="float: left"></H3>
-            <H3 th:text="${daySums.get(iterStat.index)}" style="float: right"></H3>
+            <H3 style="float: right"><span th:text="${daySums.get(iterStat.index)}"></span> rub</H3>
         </div>
 
         <div th:each="category : ${dateCategoryMap.get(day).keySet()}" >
@@ -39,8 +41,11 @@
                 <td class="boldField" th:text="${category}">
                 </td>
 
-                <td class="boldField" th:text="${categorySums.get(day).get(category)}">
+                <td class="boldField" style="text-align: right;">
+                    <span th:text="${categorySums.get(day).get(category)}"></span>
                     rub
+
+
                 </td>
             </tr>
 
@@ -49,7 +54,9 @@
                     <td th:text="${trans.trans_name}">
                     </td>
 
-                    <td th:text="${trans.amount}">
+
+                    <td style="text-align: right;">
+                        <span th:text="${trans.amount}"></span>
                         rub
                     </td>
                 </tr>
@@ -59,6 +66,7 @@
 
 
     </table>
+        </div>
     </div>
 </div>
 

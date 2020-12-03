@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="budget_controller" />
+        <module name="budget_controller999" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="budget_controller" target="8" />
+      <module name="budget_controller999" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>
