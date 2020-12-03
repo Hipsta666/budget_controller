@@ -16,6 +16,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         con = DriverManager.getConnection(url, user, pwd);
     }
 
+
     @Override
     public HashMap<String, HashMap<String, ArrayList<Transaction>>> grouping() throws SQLException {
         state = con.createStatement();
@@ -121,8 +122,20 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     }
 
     @Override
-    public Transaction findTransaction(Long id) {
-        return new Transaction();
+    public Transaction findTransaction(Long id) throws SQLException {
+        Transaction transaction = new Transaction();
+        state = con.createStatement();
+        ResultSet rs = state.executeQuery("select * from transactions where id=" + id +";");
+
+        while (rs.next()) {
+            transaction.setId(rs.getLong(1));
+            transaction.setDate(rs.getString(2));
+            transaction.setCategory_id(rs.getLong(3));
+            transaction.setTrans_name(rs.getString(4));
+            transaction.setAmount(rs.getInt(5));
+
+        }
+        return transaction;
     }
 
     @Override
@@ -134,12 +147,13 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         while (uniqueCategory.next()) {
             categories.put(uniqueCategory.getLong(1), uniqueCategory.getString(2));
         }
+
         return categories;
     }
 
     @Override
     public ArrayList<Category> findCategories(){
-        ArrayList<Category> transactions = new ArrayList<Category>();
+        ArrayList<Category> categories = new ArrayList<Category>();
         try {
             state = con.createStatement();
             ResultSet rsCategory = state.executeQuery("select distinct * from categories;");
@@ -150,12 +164,13 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
                 category.setCategoryName(rsCategory.getString(2));
                 category.setId(rsCategory.getInt(1));
 
-                transactions.add(category);
+                categories .add(category);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return transactions;
+
+        return categories ;
     }
 
 
@@ -207,6 +222,15 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
             throwables.printStackTrace();
         }
         return dates;
+    }
+
+    @Override
+    public void updateStudent(Transaction transaction) {
+        System.out.println(transaction.getId());
+        System.out.println(transaction.getDate());
+        System.out.println(transaction.getTrans_name());
+        System.out.println(transaction.getCategory_id());
+        System.out.println(transaction.getAmount());
     }
 
 }

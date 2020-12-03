@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -37,11 +38,36 @@ import java.util.*;
 @RequestMapping("/")
 public class TransactionController {
 	private final TransactionRepository transactionRepository;
+	private Long id;
 
 	@Autowired
 	public TransactionController(TransactionRepository transactionRepository) {
 		this.transactionRepository = transactionRepository;
 	}
+
+	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+	public ModelAndView edit(@PathVariable("id") Transaction transaction) throws SQLException {
+		id = transaction.getId();
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("transactions/edit");
+		mav.addObject("categories", this.transactionRepository.findCategories());
+		mav.addObject("transaction", this.transactionRepository.findTransaction(transaction.getId()));
+		return mav;
+	}
+
+	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
+	public ModelAndView edit(@Valid Transaction transaction, BindingResult result,
+							 RedirectAttributes redirect) throws SQLException {
+		if (result.hasErrors()) {
+			return new ModelAndView("transactions/edit", "formErrors", result.getAllErrors());
+		}
+
+		transaction.setId(id);
+		this.transactionRepository.updateStudent(transaction);
+
+		return new ModelAndView("redirect:/transactions");
+	}
+
 
 
 	@RequestMapping("/transactions")
@@ -50,7 +76,6 @@ public class TransactionController {
 		ArrayList<Integer> daySums = this.transactionRepository.getDaySums();
 		HashMap<String, HashMap<String, Integer>> categorySums = this.transactionRepository.getCategorySums();
 		ArrayList<String> dates = this.transactionRepository.getDates();
-
 
 		ModelAndView mav = new ModelAndView();
 
@@ -87,9 +112,10 @@ public class TransactionController {
 			mav.addObject("formErrors", result.getAllErrors());
 			return mav;
 		}
-		String[] date = transaction.getDate().split("-");
-		String reversDate = date[2] + "-" + date[1] + "-" +  date[0];
-		transaction.setDate(reversDate);
+
+//		String[] date = transaction.getDate().split("-");
+//		String reversDate = date[2] + "-" + date[1] + "-" +  date[0];
+//		transaction.setDate(reversDate);
 		this.transactionRepository.saveTransaction(transaction);
 
 		return new ModelAndView("redirect:/transactions");

@@ -14,12 +14,14 @@ public interface TransactionRepository {
 
     void saveTransaction(Transaction transaction) throws SQLException;
 
-    Transaction findTransaction(Long id);
+    Transaction findTransaction(Long id) throws SQLException;
 
     HashMap<Long, String> getCategories() throws SQLException;
 
     ArrayList<Category> findCategories();
 
     ArrayList<String> getDates();
+
+    void updateStudent(Transaction transaction);
 
 }

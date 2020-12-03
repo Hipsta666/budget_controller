@@ -45,11 +45,10 @@
     </form>
 
     <div class="prokrutka">
-
-        <p th:each="category : ${categories}"
-           th:text="${category.categoryName}">
-        </p>
-
+        <div th:each="category,state : ${categories}">
+            <span th:text="${categories.size()-state.count + 1}" style="float: left"></span>
+            <p th:text="${category}"></p>
+        </div>
 
     </div>
 

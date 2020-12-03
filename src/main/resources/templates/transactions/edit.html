@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+<head>
+  <title>Добавить транзакицю</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet" />
+  <link type="text/css" media="all" rel="stylesheet"
+        th:href="@{/css/default.css}"
+        href="../../css/default.css"/>
+  <link type="text/css" media="all" rel="stylesheet"
+        th:href="@{/css/fonts.css}"
+        href="../../css/fonts.css"/>
+</head>
+<body>
+
+<div layout:fragment="content"
+     class="container">
+  <form id="transactionForm"
+        th:action="@{'/edit/' + ${transaction.id}}"
+        th:object="${transaction}"
+        action="#"
+        method="post">
+    <div th:if="${#fields.hasErrors('*')}"
+         class="alert alert-error">
+      <p th:each="error : ${#fields.errors('*')}"
+         th:text="${error}">
+        Validation error
+      </p>
+
+    </div>
+
+    <div th:if="${transaction.id==null}">
+      <p>
+      <h3>Транзакция не найдена</h3>
+      </p>
+    </div>
+    <div th:if="${transaction.id!=null}">
+      <div>
+        <label for="date">Дата</label>
+        <input type="date" id="date" max="2020-12-03"
+               th:field="*{date}"
+               th:class="${#fields.hasErrors('date')} ? 'field-error'"/>
+        <span class="validity"></span>
+      </div>
+
+      <label>Категория</label>
+      <select th:field="*{category_id}" th:class="${#fields.hasErrors('category_id')} ? 'field-error'">
+        <option value="">Выберите категорию</option>
+        <option th:each="category : ${categories}" th:text="${category.categoryName}" th:value="${category.id}">
+        </option>
+      </select>
+
+      <label for="trans_name">Название</label>
+      <input type="text"
+             th:field="*{trans_name}"
+             th:class="${#fields.hasErrors('trans_name')} ? 'field-error'"/>
+
+      <label for="amount">Сумма</label>
+      <input type="number"
+
+             th:field="*{amount}"
+             th:class="${#fields.hasErrors('amount')} ? 'field-error'"/>
+
+      <div class="form-actions">
+        <input class="button" id="cancel" onclick="location.href='/transactions';" type="reset" value="Отменить"/>
+        <input class="button" type="submit" value="Сохранить"/>
+      </div>
+
+    </div>
+  </form>
+</div>
+
+
+</body>
+</html>

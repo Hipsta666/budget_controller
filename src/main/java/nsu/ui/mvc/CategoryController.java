@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 
 /**
@@ -38,8 +39,13 @@ public class CategoryController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView createCategoryForm(@ModelAttribute Category category) {
         ArrayList<Category> categories = this.categoryRepository.findCategories();
+        ArrayList<String> names = new ArrayList<>();
+        for (Category obj:categories){
+            names.add(obj.getCategoryName());
+        }
+        Collections.reverse(names);
 
-        return new ModelAndView("transactions/categories", "categories", categories);
+        return new ModelAndView("transactions/categories", "categories", names);
     }
 
     @RequestMapping(method = RequestMethod.POST)
