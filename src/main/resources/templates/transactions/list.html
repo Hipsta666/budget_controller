@@ -4,7 +4,7 @@
       layout:decorator="layout">
 <head>
 
-        <title>Transactions : Create</title>
+        <title>Транзакции</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="keywords" content="" />
         <meta name="description" content="" />
@@ -23,17 +23,17 @@
 <body>
 <div layout:fragment="content">
     <div class="container">
-        <h2 layout:fragment="header">Transactions : View all</h2>
         <div style="width: 500px; padding-left: 23%">
 
-    <p th:if="${dateCategoryMap.empty}">No transactions</p>
+    <p th:if="${dateCategoryMap.empty}">История транзакций пуста :(</p>
 
 
     <table class="table table-bordered table-striped" th:each="day,iterStat : ${dates}">
-        <!--            th:each="day: ${date}"-->
         <div class="date-sum">
             <H3 th:text="${day}" style="float: left"></H3>
-            <H3 style="float: right"><span th:text="${daySums.get(iterStat.index)}"></span> rub</H3>
+            <H3 style="float: right">
+                <span th:if="${daySums.get(iterStat.index) > 0}">+</span><span th:text="${daySums.get(iterStat.index)}"></span> руб.
+            </H3>
         </div>
 
         <div th:each="category : ${dateCategoryMap.get(day).keySet()}" >
@@ -42,8 +42,8 @@
                 </td>
 
                 <td class="boldField" style="text-align: right;">
-                    <span th:text="${categorySums.get(day).get(category)}"></span>
-                    rub
+                    <span th:if="${categorySums.get(day).get(category) > 0}">+</span><span th:text="${categorySums.get(day).get(category)}"></span>
+                    руб.
 
 
                 </td>
@@ -56,8 +56,8 @@
 
 
                     <td style="text-align: right;">
-                        <span th:text="${trans.amount}"></span>
-                        rub
+                        <span th:if="${trans.amount > 0}">+</span><span th:text="${trans.amount}"></span>
+                        руб.
                     </td>
                 </tr>
             </div>

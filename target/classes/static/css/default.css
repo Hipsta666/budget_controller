@@ -471,12 +471,12 @@ ul.contact li a.icon-rss:before
 
 #menu li:hover a, #menu li.active a, #menu li.active span
 {
-	background-color: #b3b3b3;
+	background-color: #94b1da;
 }
 
 #menu .current_page_item a
 {
-	color: #8dc63f;
+	background-color: #94b1da;
 }
 
 /*********************************************************************************/

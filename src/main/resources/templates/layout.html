@@ -6,6 +6,7 @@
       href="../../css/bootstrap.min.css"/>
     <link rel="stylesheet"
           href="../../css/style.css"/>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   </head>
   <body>
     <div>
@@ -20,17 +21,17 @@
 
               <li>
                 <a th:href="@{/create}" href="transactionForm.html" class="active">
-                  Create transaction
+                  Добавить транзакцию
                 </a>
               </li>
               <li>
                 <a th:href="@{/transactions}" href="transactions.html" class="active">
-                  transactions
+                  Транзакции
                 </a>
               </li>
               <li>
                 <a th:href="@{/categories}" href="categoryForm.html" class="active">
-                  categories
+                  Категории
                 </a>
               </li>
 
@@ -44,7 +45,7 @@
               <div id="featured-wrapper">
                 <div id="featured" class="extra2 margin-btm container">
                   <div layout:fragment="content" class="main-title">
-                    Choose
+
                   </div>
                 </div>
               </div>
@@ -56,4 +57,18 @@
 
           </div>
         </body>
+  <script>
+    $(function ($) {
+    var location = window.location.href;
+    var cur_url = '/' + location.split('/').pop();
+
+    $('#menu li').each(function () {
+        var link = $(this).find('a').attr('href');
+
+        if (cur_url == link) {
+            $(this).addClass('current_page_item');
+        }
+    });
+});
+  </script>
       </html>

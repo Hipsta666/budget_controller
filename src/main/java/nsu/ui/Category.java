@@ -10,7 +10,7 @@ public class Category {
     @NotNull
     private int id;
 
-    @NotEmpty(message = "Category name is required.")
+    @NotEmpty(message = "Название категории - обязательное поле.")
     private String categoryName;
 
     public int getId() {

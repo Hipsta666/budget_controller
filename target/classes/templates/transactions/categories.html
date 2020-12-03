@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       layout:decorator="layout">
 <head>
-    <title>Transactions : Create</title>
+    <title>Категории</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="keywords" content="" />
     <meta name="description" content="" />
@@ -14,7 +14,7 @@
     <link type="text/css" media="all" rel="stylesheet"
           th:href="@{/css/fonts.css}"
           href="../../css/fonts.css"/>
-    <!--[if IE 6]><link href="default_ie6.css" rel="stylesheet" type="text/css" /><![endif]-->
+    <link href="default_ie6.css" rel="stylesheet" type="text/css" />
 
 
 </head>
@@ -22,7 +22,6 @@
 
 <div layout:fragment="content"
      class="container">
-    <h2 layout:fragment="header">Categories</h2>
     <form id="categories"
           th:action="@{/categories}"
           th:object="${category}"
@@ -36,12 +35,12 @@
             </p>
         </div>
 
-        <label for="categoryName">Category name</label>
+        <label for="categoryName">Название категории</label>
         <input type="text"
                th:field="*{categoryName}"
                th:class="${#fields.hasErrors('categoryName')} ? 'field-error'"/>
         <div class="form-actions">
-            <input class="button" type="submit" value="Create"/>
+            <input class="button" type="submit" value="Добавить"/>
         </div>
     </form>
 
@@ -49,7 +48,6 @@
 
         <p th:each="category : ${categories}"
            th:text="${category.categoryName}">
-
         </p>
 
 

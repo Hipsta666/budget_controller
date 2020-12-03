@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 
 /**
@@ -37,6 +38,7 @@ public class CategoryController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView createCategoryForm(@ModelAttribute Category category) {
         ArrayList<Category> categories = this.categoryRepository.findCategories();
+
         return new ModelAndView("transactions/categories", "categories", categories);
     }
 
@@ -44,10 +46,17 @@ public class CategoryController {
     public ModelAndView createCategory(@Valid Category category, BindingResult result,
                                        RedirectAttributes redirect) throws SQLException {
         if (result.hasErrors()) {
-            return new ModelAndView("transactions/categories", "formErrors", result.getAllErrors());
+            ModelAndView mav = new ModelAndView();
+            ArrayList<Category> categories = this.categoryRepository.findCategories();
+
+            mav.setViewName("transactions/categories");
+            mav.addObject("formErrors", result.getAllErrors());
+
+
+            return mav;
         }
         this.categoryRepository.saveCategory(category);
-        return new ModelAndView("redirect:/categories");
+        return new ModelAndView("redirect:/categories","formErrors", result.getAllErrors());
 
     }
 

@@ -14,19 +14,16 @@ public class Transaction {
 
     private Long id;
 
-    @NotEmpty(message = "Date is required.")
+    @NotEmpty(message = "Дата - обязательное поле.")
     private String date;
 
-//    @NotEmpty(message = "cat is required.")
-//    private String category;
-
-    @NotNull(message = "Category is required.")
+    @NotNull(message = "Категория - обязательное поле.")
     private Long category_id;
 
-    @NotEmpty(message = "Name is required.")
+    @NotEmpty(message = "Название - обязательное поле.")
     private String trans_name;
 
-    @NotNull(message = "amount is required.")
+    @NotNull(message = "Сумма - обязательное поле.")
     private int amount;
 
 
@@ -73,11 +70,5 @@ public class Transaction {
         this.amount = amount;
     }
 
-//    public String getCategory() {
-//        return category;
-//    }
-//
-//    public void setCategory(String category) {
-//        this.category = category;
-//    }
+
 }
