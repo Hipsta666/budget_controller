@@ -46,7 +46,7 @@
 
     <div class="prokrutka">
         <div th:each="category,state : ${categories}">
-            <span th:text="${categories.size()-state.count + 1}" style="float: left"></span>
+            <span th:text="${categories.size() - state.count + 1}" style="float: left"></span>
             <p th:text="${category}"></p>
         </div>
 

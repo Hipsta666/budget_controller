@@ -41,7 +41,7 @@
     <div th:if="${transaction.id!=null}">
       <div>
         <label for="date">Дата</label>
-        <input type="date" id="date" max="2020-12-03"
+        <input type="date" id="date" max="2020-12-10"
                th:field="*{date}"
                th:class="${#fields.hasErrors('date')} ? 'field-error'"/>
         <span class="validity"></span>
@@ -61,13 +61,14 @@
 
       <label for="amount">Сумма</label>
       <input type="number"
-
+             placeholder="руб."
              th:field="*{amount}"
              th:class="${#fields.hasErrors('amount')} ? 'field-error'"/>
 
       <div class="form-actions">
         <input class="button" id="cancel" onclick="location.href='/transactions';" type="reset" value="Отменить"/>
         <input class="button" type="submit" value="Сохранить"/>
+        <input class="button" id="delete" type="submit" th:formaction="@{/delete}" value="Удалить"/>
       </div>
 
     </div>

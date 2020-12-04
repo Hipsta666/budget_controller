@@ -52,7 +52,7 @@
             <div th:each="trans : ${dateCategoryMap.get(day).get(category)}">
                 <tr class="row" th:classappend="${iterStat.odd} ? 'odd-row' : 'even-row'">
                     <td>
-                        <a href="edit.html" style="color:red;"
+                        <a href="edit.html" style="color:blue;"
                            th:text="${trans.trans_name}"
                            th:href="@{'/edit/' + ${trans.id}}">
                         </a>

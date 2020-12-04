@@ -22,6 +22,8 @@ public interface TransactionRepository {
 
     ArrayList<String> getDates();
 
-    void updateStudent(Transaction transaction);
+    void updateTransaction(Transaction transaction) throws SQLException;
+
+    void deleteTransaction(Transaction transaction) throws SQLException;
 
 }

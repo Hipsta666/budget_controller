@@ -59,15 +59,30 @@ public class TransactionController {
 	public ModelAndView edit(@Valid Transaction transaction, BindingResult result,
 							 RedirectAttributes redirect) throws SQLException {
 		if (result.hasErrors()) {
+			ArrayList<Category> categories = this.transactionRepository.findCategories();
+			ModelAndView mav = new ModelAndView();
+			mav.setViewName("transactions/edit");
+			mav.addObject("categories", categories);
+			return mav;
+		}
+
+		transaction.setId(id);
+		this.transactionRepository.updateTransaction(transaction);
+		return new ModelAndView("redirect:/transactions");
+	}
+
+
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	public ModelAndView delete(@Valid Transaction transaction, BindingResult result,
+							 RedirectAttributes redirect) throws SQLException {
+		if (result.hasErrors()) {
 			return new ModelAndView("transactions/edit", "formErrors", result.getAllErrors());
 		}
 
 		transaction.setId(id);
-		this.transactionRepository.updateStudent(transaction);
-
+		this.transactionRepository.deleteTransaction(transaction);
 		return new ModelAndView("redirect:/transactions");
 	}
-
 
 
 	@RequestMapping("/transactions")
@@ -113,9 +128,6 @@ public class TransactionController {
 			return mav;
 		}
 
-//		String[] date = transaction.getDate().split("-");
-//		String reversDate = date[2] + "-" + date[1] + "-" +  date[0];
-//		transaction.setDate(reversDate);
 		this.transactionRepository.saveTransaction(transaction);
 
 		return new ModelAndView("redirect:/transactions");

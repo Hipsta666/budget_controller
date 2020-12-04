@@ -33,7 +33,7 @@
         </div>
 
         <label for="date">Дата</label>
-        <input type="date" id="date" name="date" max="2020-12-03"
+        <input type="date" id="date" name="date" max="2020-12-10"
                th:field="*{date}"
                th:class="${#fields.hasErrors('date')} ? 'field-error'"/>
 
@@ -51,7 +51,7 @@
 
         <label for="amount">Сумма</label>
         <input type="number"
-
+               placeholder="руб."
                th:field="*{amount}"
                th:class="${#fields.hasErrors('amount')} ? 'field-error'"/>
 

@@ -23,6 +23,7 @@ public class Transaction {
     @NotEmpty(message = "Название - обязательное поле.")
     private String trans_name;
 
+
     @NotNull(message = "Сумма - обязательное поле.")
     private int amount;
 

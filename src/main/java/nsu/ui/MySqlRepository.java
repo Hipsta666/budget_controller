@@ -225,12 +225,15 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     }
 
     @Override
-    public void updateStudent(Transaction transaction) {
-        System.out.println(transaction.getId());
-        System.out.println(transaction.getDate());
-        System.out.println(transaction.getTrans_name());
-        System.out.println(transaction.getCategory_id());
-        System.out.println(transaction.getAmount());
+    public void updateTransaction(Transaction transaction) throws SQLException {
+
+        state.executeUpdate("update transactions set date='" + transaction.getDate() + "', category_id='" + transaction.getCategory_id() + "'," +
+                " trans_name='" + transaction.getTrans_name() + "', amount=" + transaction.getAmount() + " where id=" + transaction.getId() + ";");
+    }
+
+    @Override
+    public void deleteTransaction(Transaction transaction) throws SQLException {
+        state.executeUpdate("delete from transactions where id=" + transaction.getId() + ";");
     }
 
 }

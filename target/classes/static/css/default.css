@@ -324,11 +324,15 @@ ul.contact li a.icon-rss:before
 	background: #75a5e8;
 }
 
+
 #cancel
 {
 	background: #cccccc;
 }
-
+#delete
+{
+	background: #cccccc;
+}
 #cancel:hover
 {
 	background: #a0a0a0;
