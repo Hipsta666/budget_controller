@@ -8,5 +8,5 @@ public interface CategoryRepository {
 
     ArrayList<Category> findCategories();
 
-    void deleteCategory(Category category) throws SQLException;
+    void deleteCategory(String category) throws SQLException;
 }

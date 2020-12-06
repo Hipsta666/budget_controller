@@ -6,7 +6,7 @@ import java.util.*;
 public class MySqlRepository implements TransactionRepository, CategoryRepository{
     public static final String url = "jdbc:mysql://localhost:3306/expense_controller?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     public static final String user = "root";
-    public static final String pwd = "";
+    public static final String pwd = "Qazwsxqwerty123";
 
     Statement state;
     Connection con;
@@ -23,23 +23,23 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         ArrayList<String> dates = getDates();
         ArrayList<Transaction> transactions = getTransactions();
 
-        HashMap<Long, String> categories = getCategories();
+        ArrayList<Category> categories = findCategories();
         HashMap<String, HashMap<String, ArrayList<Transaction>>> datesCategory = new HashMap<String, HashMap<String, ArrayList<Transaction>>>();
 
 
         for (String date:dates){
             HashMap<String, ArrayList<Transaction>> categoryTransaction = new HashMap<String, ArrayList<Transaction>>();
-            for (Long id :categories.keySet()){
+            for (Category category :categories){
                 ArrayList<Transaction> transactionByCategory = new ArrayList<Transaction>();
                 for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext();) {
                     Transaction transaction = iterator.next();
-                    if (id.equals(transaction.getCategory_id()) && date.equals(transaction.getDate())){
+                    if (category.getId().equals(transaction.getCategory_id()) && date.equals(transaction.getDate())){
 
                         transactionByCategory.add(transaction);
                         iterator.remove();
                     }
                 }
-                if (!transactionByCategory.isEmpty()) categoryTransaction.put(categories.get(id), transactionByCategory);
+                if (!transactionByCategory.isEmpty()) categoryTransaction.put(category.getCategoryName(), transactionByCategory);
             }
             datesCategory.put(date, categoryTransaction);
         }
@@ -67,15 +67,15 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         state = con.createStatement();
 
 
-        HashMap<Long, String> categories = getCategories();
+        ArrayList<Category> categories = findCategories();
         HashMap<String, HashMap<String, Integer>> categorySums = new HashMap<>();
         for (String date:getDates()){
             HashMap<String, Integer> sums = new HashMap<>();
-            for (Long id:categories.keySet()){
+            for (Category category:categories){
 
-                ResultSet sum = state.executeQuery("select sum(transactions.amount) from transactions, categories where categories.id = transactions.category_id and transactions.date = '" + date + "' and categories.category_name='" + categories.get(id) + "';");
+                ResultSet sum = state.executeQuery("select sum(transactions.amount) from transactions, categories where categories.id = transactions.category_id and transactions.date = '" + date + "' and categories.category_name='" + category.getCategoryName() + "';");
                 while (sum.next()) {
-                    sums.put(categories.get(id), sum.getInt(1));
+                    sums.put(category.getCategoryName(), sum.getInt(1));
                 }
 
             }
@@ -138,18 +138,6 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         return transaction;
     }
 
-    @Override
-    public HashMap<Long, String> getCategories() throws SQLException {
-        state = con.createStatement();
-
-        HashMap<Long, String> categories = new HashMap<>();
-        ResultSet uniqueCategory = state.executeQuery("select distinct transactions.category_id, categories.category_name from transactions, categories where categories.id = transactions.category_id;");
-        while (uniqueCategory.next()) {
-            categories.put(uniqueCategory.getLong(1), uniqueCategory.getString(2));
-        }
-
-        return categories;
-    }
 
     @Override
     public ArrayList<Category> findCategories(){
@@ -162,7 +150,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
                 Category category = new Category();
 
                 category.setCategoryName(rsCategory.getString(2));
-                category.setId(rsCategory.getInt(1));
+                category.setId(rsCategory.getLong(1));
 
                 categories .add(category);
             }
@@ -185,8 +173,6 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
                 transaction.setId(rsTransaction.getLong(1));
                 transaction.setDate(rsTransaction.getString(2));
                 transaction.setCategory_id(rsTransaction.getLong(3));
-//                transaction.setCategory_id(rsTransaction.getLong(3));
-
                 transaction.setTrans_name(rsTransaction.getString(4));
                 transaction.setAmount(rsTransaction.getInt(5));
                 transactions.add(transaction);
@@ -232,13 +218,13 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     }
 
     @Override
-    public void deleteTransaction(Transaction transaction) throws SQLException {
-        state.executeUpdate("delete from transactions where id=" + transaction.getId() + ";");
+    public void deleteTransaction(Long id) throws SQLException {
+        state.executeUpdate("delete from transactions where id=" + id + ";");
     }
 
     @Override
-    public void deleteCategory(Category category) throws SQLException {
-        state.executeUpdate("delete from categories where id=" + category.getId() + ";");
+    public void deleteCategory(String category) throws SQLException {
+        state.executeUpdate("delete from categories where category_name='" + category + "';");
     }
 
 }

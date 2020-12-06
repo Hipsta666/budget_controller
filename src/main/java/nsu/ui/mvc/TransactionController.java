@@ -78,9 +78,7 @@ public class TransactionController {
 		if (result.hasErrors()) {
 			return new ModelAndView("transactions/edit", "formErrors", result.getAllErrors());
 		}
-
-		transaction.setId(id);
-		this.transactionRepository.deleteTransaction(transaction);
+		this.transactionRepository.deleteTransaction(id);
 		return new ModelAndView("redirect:/transactions");
 	}
 

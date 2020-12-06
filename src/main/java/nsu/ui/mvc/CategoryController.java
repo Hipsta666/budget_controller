@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -30,13 +27,11 @@ import java.util.Collections;
 @RequestMapping("/categories")
 public class CategoryController {
     private final CategoryRepository categoryRepository;
-    private int id;
 
     @Autowired
     public CategoryController(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
-
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -57,11 +52,16 @@ public class CategoryController {
         if (result.hasErrors()) {
             ModelAndView mav = new ModelAndView();
             ArrayList<Category> categories = this.categoryRepository.findCategories();
+            ArrayList<String> names = new ArrayList<>();
+
+            for (Category obj:categories){
+                names.add(obj.getCategoryName());
+            }
+            Collections.reverse(names);
 
             mav.setViewName("transactions/categories");
             mav.addObject("formErrors", result.getAllErrors());
-
-
+            mav.addObject("categories", names);
             return mav;
         }
         this.categoryRepository.saveCategory(category);
@@ -69,20 +69,13 @@ public class CategoryController {
 
     }
 
-    @RequestMapping(value = "/delete_category", method = RequestMethod.POST)
-    public ModelAndView delete(@Valid Category category, BindingResult result,
-                        RedirectAttributes redirect) throws SQLException {
-        if (result.hasErrors()) {
-            return new ModelAndView("transactions/categories", "formErrors", result.getAllErrors());
-        }
+    @RequestMapping(value = "/delete_category/{category}", method = RequestMethod.POST)
+    public ModelAndView delete_category(@PathVariable("category") String category,
+                                        RedirectAttributes redirect) throws SQLException {
 
-        category.setId(id);
         this.categoryRepository.deleteCategory(category);
         return new ModelAndView("redirect:/categories");
     }
-
-
-
 
 
     @RequestMapping("foo")
