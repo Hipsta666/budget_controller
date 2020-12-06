@@ -6,7 +6,7 @@ import java.util.*;
 public class MySqlRepository implements TransactionRepository, CategoryRepository{
     public static final String url = "jdbc:mysql://localhost:3306/expense_controller?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     public static final String user = "root";
-    public static final String pwd = "Qazwsxqwerty123";
+    public static final String pwd = "";
 
     Statement state;
     Connection con;
@@ -234,6 +234,11 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     @Override
     public void deleteTransaction(Transaction transaction) throws SQLException {
         state.executeUpdate("delete from transactions where id=" + transaction.getId() + ";");
+    }
+
+    @Override
+    public void deleteCategory(Category category) throws SQLException {
+        state.executeUpdate("delete from categories where id=" + category.getId() + ";");
     }
 
 }

@@ -42,15 +42,23 @@
         <div class="form-actions">
             <input class="button" type="submit" value="Добавить"/>
         </div>
-    </form>
 
-    <div class="prokrutka">
-        <div th:each="category,state : ${categories}">
-            <span th:text="${categories.size() - state.count + 1}" style="float: left"></span>
-            <p th:text="${category}"></p>
+        <div class="prokrutka">
+            <div th:each="category,state : ${categories}">
+                <div class="form-action">
+                    <input class="button" id="delete" type="submit" th:formmethod="post" th:formaction="@{/categories/delete_category}" value="Удалить"/>
+                </div>
+
+                <span th:text="${categories.size() - state.count + 1}" th:formaction="@{/delete}" style="float: left"></span>
+                <p th:text="${category}"></p>
+            </div>
         </div>
 
-    </div>
+    </form>
+
+
+
+
 
 </div>
 

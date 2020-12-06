@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -21,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 
+
 /**
  * @author Rob Winch
  */
@@ -28,6 +30,7 @@ import java.util.Collections;
 @RequestMapping("/categories")
 public class CategoryController {
     private final CategoryRepository categoryRepository;
+    private int id;
 
     @Autowired
     public CategoryController(CategoryRepository categoryRepository) {
@@ -65,6 +68,21 @@ public class CategoryController {
         return new ModelAndView("redirect:/categories","formErrors", result.getAllErrors());
 
     }
+
+    @RequestMapping(value = "/delete_category", method = RequestMethod.POST)
+    public ModelAndView delete(@Valid Category category, BindingResult result,
+                        RedirectAttributes redirect) throws SQLException {
+        if (result.hasErrors()) {
+            return new ModelAndView("transactions/categories", "formErrors", result.getAllErrors());
+        }
+
+        category.setId(id);
+        this.categoryRepository.deleteCategory(category);
+        return new ModelAndView("redirect:/categories");
+    }
+
+
+
 
 
     @RequestMapping("foo")

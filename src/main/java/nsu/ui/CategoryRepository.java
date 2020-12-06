@@ -7,4 +7,6 @@ public interface CategoryRepository {
     Category saveCategory(Category category) throws SQLException;
 
     ArrayList<Category> findCategories();
+
+    void deleteCategory(Category category) throws SQLException;
 }
