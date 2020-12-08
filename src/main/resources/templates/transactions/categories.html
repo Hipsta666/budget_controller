@@ -14,7 +14,7 @@
     <link type="text/css" media="all" rel="stylesheet"
           th:href="@{/css/fonts.css}"
           href="../../css/fonts.css"/>
-    <link href="default_ie6.css" rel="stylesheet" type="text/css" />
+    <link href="default_ie6.css" rel="stylesheet" type="text/css"/>
 
 
 </head>
@@ -47,10 +47,10 @@
         <div th:each="category,state : ${categories}">
             <form th:action="@{'/categories/delete_category/' + ${category}}"
             method="post">
-                <span th:text="${categories.size() - state.count + 1}" style="float: left"></span>
                 <div class="form-action">
+                    <input type="image" th:src="@{/css/krest.png}" style="width:20px; height: 20px; float: left;"/>
                     <span th:text="${category}"></span>
-                    <input id="delete" type="submit" value="Удалить" style="float:right;"/>
+
                 </div>
 
 
