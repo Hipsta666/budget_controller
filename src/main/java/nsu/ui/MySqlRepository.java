@@ -84,7 +84,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         }
         return categorySums;
     }
-    
+
     @Override
     public Category saveCategory(Category category) throws SQLException {
         String name = category.getCategoryName();
@@ -96,6 +96,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         return category;
     }
 
+    @Override
     public boolean checkDB(String dbName, String field, String value) throws SQLException {
         state = con.createStatement();
 
@@ -226,5 +227,4 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     public void deleteCategory(String category) throws SQLException {
         state.executeUpdate("delete from categories where category_name='" + category + "';");
     }
-
 }

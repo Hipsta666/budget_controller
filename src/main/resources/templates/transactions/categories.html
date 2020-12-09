@@ -14,7 +14,7 @@
     <link type="text/css" media="all" rel="stylesheet"
           th:href="@{/css/fonts.css}"
           href="../../css/fonts.css"/>
-    <link href="default_ie6.css" rel="stylesheet" type="text/css"/>
+    <link href="default_ie6.css" rel="stylesheet" type="text/css" />
 
 
 </head>
@@ -35,6 +35,10 @@
             </p>
         </div>
 
+        <div th:if="${state}" style="display: block;">
+            <p>Такая категория уже существует!</p>
+        </div>
+
         <label for="categoryName">Название категории</label>
         <input type="text"
                th:field="*{categoryName}"
@@ -46,23 +50,17 @@
     <div class="prokrutka">
         <div th:each="category,state : ${categories}">
             <form th:action="@{'/categories/delete_category/' + ${category}}"
-            method="post">
+                  method="post">
+                <span th:text="${categories.size() - state.count + 1}" style="float: left; width:18px;"></span>
                 <div class="form-action">
-                    <input type="image" th:src="@{/css/krest.png}" style="width:20px; height: 20px; float: left;"/>
                     <span th:text="${category}"></span>
-
+                    <input type="image" th:src="@{/img/krest.png}" style="width:18px; height: 18px; float: right;"/>
                 </div>
 
 
             </form>
         </div>
     </div>
-
-
-
-
-
-
 
 </div>
 

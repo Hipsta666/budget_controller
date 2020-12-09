@@ -49,7 +49,8 @@ public class CategoryController {
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView createCategory(@Valid Category category, BindingResult result,
                                        RedirectAttributes redirect) throws SQLException {
-        if (result.hasErrors()) {
+        System.out.println(category.getCategoryName());
+        if (result.hasErrors() || this.categoryRepository.checkDB("categories", "category_name", category.getCategoryName())) {
             ModelAndView mav = new ModelAndView();
             ArrayList<Category> categories = this.categoryRepository.findCategories();
             ArrayList<String> names = new ArrayList<>();
@@ -62,8 +63,13 @@ public class CategoryController {
             mav.setViewName("transactions/categories");
             mav.addObject("formErrors", result.getAllErrors());
             mav.addObject("categories", names);
+            if (!category.getCategoryName().isEmpty()) {
+                mav.addObject("state", "block");
+            }
+
             return mav;
         }
+
         this.categoryRepository.saveCategory(category);
         return new ModelAndView("redirect:/categories","formErrors", result.getAllErrors());
 

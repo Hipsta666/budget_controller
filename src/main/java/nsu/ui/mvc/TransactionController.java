@@ -74,7 +74,7 @@ public class TransactionController {
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public ModelAndView delete(@Valid Transaction transaction, BindingResult result,
-							 RedirectAttributes redirect) throws SQLException {
+							   RedirectAttributes redirect) throws SQLException {
 		if (result.hasErrors()) {
 			return new ModelAndView("transactions/edit", "formErrors", result.getAllErrors());
 		}
@@ -115,7 +115,7 @@ public class TransactionController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ModelAndView createTransaction(@Valid Transaction transaction, BindingResult result,
-			RedirectAttributes redirect) throws SQLException {
+										  RedirectAttributes redirect) throws SQLException {
 
 		if (result.hasErrors()) {
 			ArrayList<Category> categories = this.transactionRepository.findCategories();

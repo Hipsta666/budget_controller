@@ -6,7 +6,6 @@ import javax.validation.constraints.NotNull;
 
 public class Category {
 
-    @NotNull
     private Long id;
 
     @NotEmpty(message = "Название категории - обязательное поле.")
