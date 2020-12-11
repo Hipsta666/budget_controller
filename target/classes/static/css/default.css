@@ -471,6 +471,7 @@ ul.contact li a.icon-rss:before
 	text-transform: uppercase;
 	outline: 0;
 	color: #FFF;
+	background-color: #2b2b2b;
 }
 
 #menu li:hover a, #menu li.active a, #menu li.active span

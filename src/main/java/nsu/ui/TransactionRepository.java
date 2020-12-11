@@ -1,12 +1,13 @@
 package nsu.ui;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface TransactionRepository {
 
-    HashMap<String, HashMap<String, ArrayList<Transaction>>> grouping() throws SQLException;
+    HashMap<String, HashMap<String, ArrayList<Transaction>>> grouping() throws SQLException, ParseException;
 
     ArrayList<Integer> getDaySums() throws SQLException;
 

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+<head>
+
+    <title>Статистика</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet" />
+    <link type="text/css" media="all" rel="stylesheet"
+          th:href="@{/css/default.css}"
+          href="../../css/default.css"/>
+    <link type="text/css" media="all" rel="stylesheet"
+          th:href="@{/css/fonts.css}"
+          href="../../css/fonts.css"/>
+    <link rel="stylesheet"
+          th:href="@{/css/style.css}"/>
+    <script src="https://www.google.com/jsapi"></script>
+
+    <script src="/js/view_chart.js" type="text/javascript"></script>
+
+    <script>
+
+    </script>
+
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+
+            <ul class="groupping">
+                <li>
+                    <button class="button stat" id="d" type="submit" onclick="viewChart('d', 'w', 'm', 'daystat', 'weekstat', 'month')">День</button>
+                </li>
+                <li>
+                    <button class="button stat" id="w" onclick="viewChart('w', 'd', 'm', 'weekstat', 'daystat', 'month')" type="submit">Неделя</button>
+                </li>
+                <li>
+                    <button class="button stat" id="m" onclick="viewChart('m', 'w', 'd', 'month', 'weekstat', 'daystat')" type="submit">Месяц</button>
+                </li>
+            </ul>
+
+        <div id="daystat">
+            <p>Изменение баланса - день</p>
+            <div class="dayChart" style="width: 500px; height: 400px;"></div>
+            <p>/диаграмма/</p>
+        </div>
+
+        <div id="weekstat" style="display: none;">
+            <p>Изменение баланса - неделя</p>
+
+            <div class="weekChart" style="width: 500px; height: 400px;"></div>
+            <p>/диаграмма/</p>
+
+        </div>
+
+        <div id="month" style="display: none;">
+            <p>Изменение баланса - месяц</p>
+
+            <div class="monthChart" style="width: 500px; height: 400px;"></div>
+            <p>/диаграмма/</p>
+        </div>
+
+        <canvas id="chart" width="600" height="400"></canvas>
+
+    </div>
+</div>
+
+</body>
+
+</html>

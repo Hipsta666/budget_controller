@@ -1,9 +1,11 @@
 package nsu.ui;
 
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class MySqlRepository implements TransactionRepository, CategoryRepository{
+public class MySqlRepository implements TransactionRepository, CategoryRepository {
     public static final String url = "jdbc:mysql://localhost:3306/expense_controller?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     public static final String user = "root";
     public static final String pwd = "Qazwsxqwerty123";
@@ -18,28 +20,32 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
 
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<Transaction>>> grouping() throws SQLException {
+    public HashMap<String, HashMap<String, ArrayList<Transaction>>> grouping() throws SQLException, ParseException {
         state = con.createStatement();
+
+        System.out.println(getGroupedDates("w"));
+        System.out.println(getGroupedDates("m"));
         ArrayList<String> dates = getDates();
-        ArrayList<Transaction> transactions = getTransactions();
+        ArrayList<Transaction> transactions = getTransactions("select transactions.id, transactions.date, transactions.category_id, transactions.trans_name, transactions.amount from transactions, categories where categories.id = transactions.category_id;");
 
         ArrayList<Category> categories = findCategories();
         HashMap<String, HashMap<String, ArrayList<Transaction>>> datesCategory = new HashMap<String, HashMap<String, ArrayList<Transaction>>>();
 
 
-        for (String date:dates){
+        for (String date : dates) {
             HashMap<String, ArrayList<Transaction>> categoryTransaction = new HashMap<String, ArrayList<Transaction>>();
-            for (Category category :categories){
+            for (Category category : categories) {
                 ArrayList<Transaction> transactionByCategory = new ArrayList<Transaction>();
-                for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext();) {
+                for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext(); ) {
                     Transaction transaction = iterator.next();
-                    if (category.getId().equals(transaction.getCategory_id()) && date.equals(transaction.getDate())){
+                    if (category.getId().equals(transaction.getCategory_id()) && date.equals(transaction.getDate())) {
 
                         transactionByCategory.add(transaction);
                         iterator.remove();
                     }
                 }
-                if (!transactionByCategory.isEmpty()) categoryTransaction.put(category.getCategoryName(), transactionByCategory);
+                if (!transactionByCategory.isEmpty())
+                    categoryTransaction.put(category.getCategoryName(), transactionByCategory);
             }
             datesCategory.put(date, categoryTransaction);
         }
@@ -53,7 +59,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         state = con.createStatement();
 
         ArrayList<Integer> sums = new ArrayList<Integer>();
-        for (String date:getDates()){
+        for (String date : getDates()) {
             ResultSet sum = state.executeQuery("select sum(amount) from transactions where date='" + date + "';");
             while (sum.next()) {
                 sums.add(sum.getInt(1));
@@ -69,9 +75,9 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
 
         ArrayList<Category> categories = findCategories();
         HashMap<String, HashMap<String, Integer>> categorySums = new HashMap<>();
-        for (String date:getDates()){
+        for (String date : getDates()) {
             HashMap<String, Integer> sums = new HashMap<>();
-            for (Category category:categories){
+            for (Category category : categories) {
 
                 ResultSet sum = state.executeQuery("select sum(transactions.amount) from transactions, categories where categories.id = transactions.category_id and transactions.date = '" + date + "' and categories.category_name='" + category.getCategoryName() + "';");
                 while (sum.next()) {
@@ -101,8 +107,8 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         state = con.createStatement();
 
         ResultSet rs = state.executeQuery(String.format("SELECT EXISTS(SELECT id FROM `%s` WHERE LOWER(%s) = LOWER('%s'));", dbName, field, value));
-        while (rs.next()){
-            if (rs.getString(1).equals("0")){
+        while (rs.next()) {
+            if (rs.getString(1).equals("0")) {
                 rs.close();
                 return false;
             }
@@ -126,7 +132,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     public Transaction findTransaction(Long id) throws SQLException {
         Transaction transaction = new Transaction();
         state = con.createStatement();
-        ResultSet rs = state.executeQuery("select * from transactions where id=" + id +";");
+        ResultSet rs = state.executeQuery("select * from transactions where id=" + id + ";");
 
         while (rs.next()) {
             transaction.setId(rs.getLong(1));
@@ -141,7 +147,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
 
 
     @Override
-    public ArrayList<Category> findCategories(){
+    public ArrayList<Category> findCategories() {
         ArrayList<Category> categories = new ArrayList<Category>();
         try {
             state = con.createStatement();
@@ -153,22 +159,22 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
                 category.setCategoryName(rsCategory.getString(2));
                 category.setId(rsCategory.getLong(1));
 
-                categories .add(category);
+                categories.add(category);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
-        return categories ;
+        return categories;
     }
 
 
-    public ArrayList<Transaction> getTransactions(){
+    public ArrayList<Transaction> getTransactions(String query) {
 
         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
         try {
             state = con.createStatement();
-            ResultSet rsTransaction = state.executeQuery("select transactions.id, transactions.date, transactions.category_id, transactions.trans_name, transactions.amount from transactions, categories where categories.id = transactions.category_id;");
+            ResultSet rsTransaction = state.executeQuery(query);
             while (rsTransaction.next()) {
                 Transaction transaction = new Transaction();
                 transaction.setId(rsTransaction.getLong(1));
@@ -186,9 +192,8 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     }
 
 
-
     @Override
-    public ArrayList<String> getDates(){
+    public ArrayList<String> getDates() {
 
         ArrayList<String> dates = new ArrayList<String>();
         try {
@@ -226,5 +231,43 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     @Override
     public void deleteCategory(String category) throws SQLException {
         state.executeUpdate("delete from categories where category_name='" + category + "';");
+    }
+
+
+    public int getWeek(String date) throws ParseException {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        calendar.setTime(sdf.parse(date));
+        return calendar.get(Calendar.WEEK_OF_YEAR);
+    }
+
+    public int getMonth(String date) {
+        String month = date.split("-")[1];
+        return Integer.parseInt(month);
+    }
+
+    public ArrayList<String> getGroupedDates(String groupBy) throws ParseException {
+        ArrayList<String> group = new ArrayList<>();
+        ArrayList<String> dates = getDates();
+        int curr;
+
+        if (groupBy.equals("w")) {
+            curr = getWeek(dates.get(0));
+            for (String date : dates) {
+                if (getWeek(date) == curr) {
+                    group.add(date);
+                }
+            }
+        }
+        else if (groupBy.equals("m")) {
+            curr = getMonth(dates.get(0));
+            for (String date : dates) {
+                if (getMonth(date) == curr) {
+                    group.add(date);
+                }
+            }
+        }
+
+        return group;
     }
 }

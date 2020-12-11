@@ -29,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -84,7 +85,7 @@ public class TransactionController {
 
 
 	@RequestMapping("/transactions")
-	public ModelAndView list() throws SQLException {
+	public ModelAndView list() throws SQLException, ParseException {
 		HashMap<String, HashMap<String, ArrayList<Transaction>>> dateCategoryMap = this.transactionRepository.grouping();
 		ArrayList<Integer> daySums = this.transactionRepository.getDaySums();
 		HashMap<String, HashMap<String, Integer>> categorySums = this.transactionRepository.getCategorySums();
@@ -101,6 +102,16 @@ public class TransactionController {
 
 		return mav;
 	}
+
+
+	@RequestMapping("/statistics")
+	public ModelAndView statistics() throws SQLException, ParseException {
+
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("transactions/statistics");
+		return mav;
+	}
+
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView createTransactionForm(@ModelAttribute Transaction transaction) throws SQLException {
