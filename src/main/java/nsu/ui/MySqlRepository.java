@@ -1,5 +1,11 @@
 package nsu.ui;
 
+
+
+
+
+import org.javatuples.Pair;
+
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,9 +28,6 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     @Override
     public HashMap<String, HashMap<String, ArrayList<Transaction>>> grouping() throws SQLException, ParseException {
         state = con.createStatement();
-
-        System.out.println(getGroupedDates("w"));
-        System.out.println(getGroupedDates("m"));
         ArrayList<String> dates = getDates();
         ArrayList<Transaction> transactions = getTransactions("select transactions.id, transactions.date, transactions.category_id, transactions.trans_name, transactions.amount from transactions, categories where categories.id = transactions.category_id;");
 
@@ -88,6 +91,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
             categorySums.put(date, sums);
 
         }
+
         return categorySums;
     }
 
@@ -246,28 +250,85 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         return Integer.parseInt(month);
     }
 
-    public ArrayList<String> getGroupedDates(String groupBy) throws ParseException {
+    @Override
+    public Pair<Integer, HashMap<String, Integer>> getStatGroupedByDates(String groupBy) throws ParseException, SQLException {
+        int sum = 0;
+        int categorySum = 0;
         ArrayList<String> group = new ArrayList<>();
+        HashMap<String, Integer> categoryValue = new HashMap<>();
+//        HashMap<Integer, HashMap<String, Integer>> result = new HashMap<>();
+        HashMap<String, HashMap<String, Integer>> dateCategoryValue = getGroupedCategoriesByValue();
         ArrayList<String> dates = getDates();
+        if (dates.isEmpty()){
+            dates.add("0000-00-00");
+        }
         int curr;
 
-        if (groupBy.equals("w")) {
-            curr = getWeek(dates.get(0));
-            for (String date : dates) {
-                if (getWeek(date) == curr) {
-                    group.add(date);
+        switch (groupBy) {
+            case "w":
+                curr = getWeek(dates.get(0));
+                for (String date : dates) {
+                    if (getWeek(date) == curr) {
+                        group.add(date);
+                    }
                 }
-            }
-        }
-        else if (groupBy.equals("m")) {
-            curr = getMonth(dates.get(0));
-            for (String date : dates) {
-                if (getMonth(date) == curr) {
-                    group.add(date);
+                break;
+            case "m":
+                curr = getMonth(dates.get(0));
+                for (String date : dates) {
+                    if (getMonth(date) == curr) {
+                        group.add(date);
+                    }
                 }
-            }
+                break;
+            case "d":
+                group.add(dates.get(0));
+                break;
         }
 
-        return group;
+        dateCategoryValue.keySet().removeIf(date -> !group.contains(date));
+//        OR
+//        for (Iterator<String> iterator = dateCategoryValue.keySet().iterator();iterator.hasNext();){
+//            String date = iterator.next();
+//            if (!group.contains(date)){
+//                iterator.remove();
+//            }
+//        }
+
+        for (HashMap<String, Integer> val: dateCategoryValue.values()){
+            for (String category: val.keySet()){
+                if (!categoryValue.containsKey(category)){
+                    sum = val.get(category);
+                }
+                else {
+                    sum = categoryValue.get(category) + val.get(category);
+                }
+                categoryValue.put(category, sum);
+            }
+        }
+        for (Integer amount: categoryValue.values()){
+            categorySum += amount;
+        }
+
+
+        return new Pair<Integer, HashMap<String, Integer>>(categorySum, categoryValue);
+    }
+
+    public HashMap<String, HashMap<String, Integer>> getGroupedCategoriesByValue() throws SQLException {
+        HashMap<String, HashMap<String, Integer>> dateCategoryValue = new HashMap<>();
+        HashMap<String, Integer> categoryValue = new HashMap<>();
+        ResultSet rsDates = state.executeQuery("select categories.category_name, sum(transactions.amount), transactions.date from transactions, categories where amount < 0 and transactions.category_id = categories.id group by category_name, date;");
+        while (rsDates.next()) {
+            if (dateCategoryValue.containsKey(rsDates.getString(3))){
+                dateCategoryValue.get(rsDates.getString(3)).put(rsDates.getString(1), rsDates.getInt(2));
+
+            }
+            else {
+                categoryValue.put(rsDates.getString(1), rsDates.getInt(2));
+                dateCategoryValue.put(rsDates.getString(3), categoryValue);
+                categoryValue = new HashMap<>();
+            }
+        }
+        return dateCategoryValue;
     }
 }

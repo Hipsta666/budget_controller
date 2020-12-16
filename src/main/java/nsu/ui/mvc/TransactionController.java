@@ -13,11 +13,10 @@
 
 package nsu.ui.mvc;
 
-import javax.validation.Valid;
-
 import nsu.ui.Category;
 import nsu.ui.Transaction;
 import nsu.ui.TransactionRepository;
+import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -28,9 +27,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author Rob Winch
@@ -106,9 +109,39 @@ public class TransactionController {
 
 	@RequestMapping("/statistics")
 	public ModelAndView statistics() throws SQLException, ParseException {
+		HashMap<String, HashMap<String, ArrayList<Transaction>>> dateCategoryMap = this.transactionRepository.grouping();
+		Pair<Integer, HashMap<String, Integer>> dayGroup = this.transactionRepository.getStatGroupedByDates("d");
+		Pair<Integer, HashMap<String, Integer>> weekGroup = this.transactionRepository.getStatGroupedByDates("w");
+		Pair<Integer, HashMap<String, Integer>> monthGroup = this.transactionRepository.getStatGroupedByDates("m");
+		Map<String, Integer> dayData = new TreeMap<>();
+		Map<String, Integer> weekData = new TreeMap<>();
+		Map<String, Integer> monthData = new TreeMap<>();
+
+		for (String category: dayGroup.getValue1().keySet()){
+			dayData.put(category, (-1)*dayGroup.getValue1().get(category));
+		}
+		for (String category: weekGroup.getValue1().keySet()){
+			weekData.put(category, (-1)*weekGroup.getValue1().get(category));
+		}
+		for (String category: monthGroup.getValue1().keySet()){
+			monthData.put(category, (-1)*monthGroup.getValue1().get(category));
+		}
 
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("transactions/statistics");
+
+		mav.addObject("sumDayGroup", dayGroup.getValue0());
+		mav.addObject("dayGroup", dayGroup.getValue1());
+		mav.addObject("dayData", dayData);
+
+		mav.addObject("sumWeekGroup", weekGroup.getValue0());
+		mav.addObject("weekGroup", weekGroup.getValue1());
+		mav.addObject("weekData", weekData);
+
+		mav.addObject("sumMonthGroup", monthGroup.getValue0());
+		mav.addObject("monthGroup", monthGroup.getValue1());
+		mav.addObject("monthData", monthData);
+
 		return mav;
 	}
 

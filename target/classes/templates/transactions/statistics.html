@@ -18,55 +18,94 @@
           th:href="@{/css/style.css}"/>
     <script src="https://www.google.com/jsapi"></script>
 
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script type="text/javascript"
+            src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="/js/view_chart.js" type="text/javascript"></script>
-
-    <script>
-
-    </script>
-
 </head>
 <body>
-<div layout:fragment="content">
-    <div class="container">
 
-            <ul class="groupping">
-                <li>
-                    <button class="button stat" id="d" type="submit" onclick="viewChart('d', 'w', 'm', 'daystat', 'weekstat', 'month')">День</button>
-                </li>
-                <li>
-                    <button class="button stat" id="w" onclick="viewChart('w', 'd', 'm', 'weekstat', 'daystat', 'month')" type="submit">Неделя</button>
-                </li>
-                <li>
-                    <button class="button stat" id="m" onclick="viewChart('m', 'w', 'd', 'month', 'weekstat', 'daystat')" type="submit">Месяц</button>
-                </li>
-            </ul>
+    <div layout:fragment="content">
+        <div class="container">
 
-        <div id="daystat">
-            <p>Изменение баланса - день</p>
-            <div class="dayChart" style="width: 500px; height: 400px;"></div>
-            <p>/диаграмма/</p>
+                <ul class="groupping">
+                    <li>
+                        <button class="button stat" id="d" type="submit" onclick="viewChart('d', 'w', 'm', 'daystat', 'weekstat', 'monthsStat')" style="background-color: #94b1da;">День</button>
+                    </li>
+                    <li>
+                        <button class="button stat" id="w" onclick="viewChart('w', 'd', 'm', 'weekstat', 'daystat', 'monthsStat')" type="submit">Неделя</button>
+                    </li>
+                    <li>
+                        <button class="button stat" id="m" onclick="viewChart('m', 'w', 'd', 'monthsStat', 'weekstat', 'daystat')" type="submit">Месяц</button>
+                    </li>
+                </ul>
+
+            <div id="daystat">
+                <p>
+                    <span>Изменение баланса </span><span th:text="${sumDayGroup}"></span><span> руб.</span>
+                </p>
+                <div id="dayChart" class="chart"></div>
+
+                <p>
+                <table width="250" style="margin: auto;">
+                    <tr th:each="category : ${dayGroup.keySet()}">
+                        <td style="text-align: left;">
+                            <span th:text="${category}"></span>
+                        </td>
+                        <td style="text-align: right;">
+                            <span th:text="${dayGroup.get(category)}"></span><span> руб.</span>
+                        </td>
+                    </tr>
+                </table>
+                </p>
+            </div>
+
+            <div id="weekstat" style="display: none;">
+                <p>
+                    <span>Изменение баланса </span><span th:text="${sumWeekGroup}"></span><span> руб.</span>
+                </p>
+                <div id="weekChart" class="chart"></div>
+                <p>
+                <table width="250" style="margin: auto;">
+                    <tr th:each="category : ${weekGroup.keySet()}">
+                        <td style="text-align: left;">
+                            <span th:text="${category}"></span>
+                        </td>
+                        <td style="text-align: right;">
+                            <span th:text="${weekGroup.get(category)}"></span><span> руб.</span>
+                        </td>
+                    </tr>
+                </table>
+                </p>
+            </div>
+
+            <div id="monthsStat" style="display: none;">
+                <p>
+                    <span>Изменение баланса </span><span th:text="${sumMonthGroup}"></span><span> руб.</span>
+                </p>
+                <div id="monthChart" class="chart"></div>
+                <p>
+                <table width="250" style="margin: auto;">
+                    <tr th:each="category : ${monthGroup.keySet()}">
+                        <td style="text-align: left;">
+                            <span th:text="${category}"></span>
+                        </td>
+                        <td style="text-align: right;">
+                            <span th:text="${monthGroup.get(category)}"></span><span> руб.</span>
+                        </td>
+                    </tr>
+                </table>
+                </p>
+            </div>
+
+            <script type="text/javascript" th:inline="javascript">
+                var dayData = [[${dayData}]];
+                var weekData = [[${weekData}]];
+                var monthData = [[${monthData}]];
+            </script>
         </div>
-
-        <div id="weekstat" style="display: none;">
-            <p>Изменение баланса - неделя</p>
-
-            <div class="weekChart" style="width: 500px; height: 400px;"></div>
-            <p>/диаграмма/</p>
-
-        </div>
-
-        <div id="month" style="display: none;">
-            <p>Изменение баланса - месяц</p>
-
-            <div class="monthChart" style="width: 500px; height: 400px;"></div>
-            <p>/диаграмма/</p>
-        </div>
-
-        <canvas id="chart" width="600" height="400"></canvas>
-
     </div>
-</div>
-
 </body>
-
 </html>

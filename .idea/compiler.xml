@@ -13,12 +13,13 @@
         <module name="budget_controller" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="budget_controller" target="8" />
-      <module name="budget_controller999" target="8" />
-      <module name="budget_controller_DEL" target="8" />
+    <bytecodeTargetLevel target="11">
       <module name="budget_controller_final_v_2" target="8" />
-      <module name="budget_controller_rus" target="8" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="budget_controller_final_v_2" options="" />
+    </option>
   </component>
 </project>

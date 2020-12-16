@@ -1,5 +1,9 @@
 package nsu.ui;
 
+
+
+import org.javatuples.Pair;
+
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -24,5 +28,6 @@ public interface TransactionRepository {
     void updateTransaction(Transaction transaction) throws SQLException;
 
     void deleteTransaction(Long id) throws SQLException;
+    Pair<Integer, HashMap<String, Integer>> getStatGroupedByDates(String groupBy) throws ParseException, SQLException;
 
 }

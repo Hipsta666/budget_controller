@@ -7,58 +7,67 @@ function viewChart(currTag, tag2, tag3, e1, e2, e3){
   document.getElementById(e3).style.display = 'none';
 }
 
-google.load("visualization", "1", {packages:["corechart"]});
-google.setOnLoadCallback(drawDayChart);
-google.setOnLoadCallback(drawWeekChart);
-google.setOnLoadCallback(drawMonthChart);
+$(document).ready(function() {
+            google.charts.load('current', {
+                packages : [ 'corechart']
+            });
+            google.charts.setOnLoadCallback(drawDayChart);
+            google.charts.setOnLoadCallback(drawWeekChart);
+            google.charts.setOnLoadCallback(drawMonthChart);
+        });
 
-function drawDayChart() {
-    var data = google.visualization.arrayToDataTable([
-     ['Газ', 'Объём'],
-     ['Азот',     78.09],
-     ['Кислород', 20.95],
-     ['Аргон',    0.93],
-     ['Углекислый газ', 0.03]
-    ]);
-    var options = {
-     title: 'Состав воздуха',
-     is3D: true,
-     pieResidueSliceLabel: 'Остальное'
-    };
-    var chart = new google.visualization.PieChart(document.getElementsByClassName('dayChart')[0]);
-    chart.draw(data, options);
-}
 
-function drawWeekChart() {
-    var data = google.visualization.arrayToDataTable([
-        ['Газ', 'Объём'],
-        ['Азот',     78.09],
-        ['Кислород', 20.95],
-        ['Аргон',    0.93],
-        ['Углекислый газ', 0.03]
-    ]);
-    var options = {
-        title: 'Состав воздуха',
-        is3D: true,
-        pieResidueSliceLabel: 'Остальное'
-    };
-    var chart = new google.visualization.PieChart(document.getElementsByClassName('weekChart')[0]);
-    chart.draw(data, options);
-}
+        function drawDayChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Category');
+            data.addColumn('number', 'Sums');
+            Object.keys(dayData).forEach(function(key) {
+                data.addRow([ key, dayData[key] ]);
+            });
+            var options = {
+                is3D: true,
+                'width':700,
+                'height':400,
+            };
+            var dChart = new google.visualization.PieChart(document
+                    .getElementById('dayChart'));
 
-function drawMonthChart() {
-    var data = google.visualization.arrayToDataTable([
-        ['Газ', 'Объём'],
-        ['Азот',     78.09],
-        ['Кислород', 20.95],
-        ['Аргон',    0.93],
-        ['Углекислый газ', 0.03]
-    ]);
-    var options = {
-        title: 'Состав воздуха',
-        is3D: true,
-        pieResidueSliceLabel: 'Остальное'
-    };
-    var chart = new google.visualization.PieChart(document.getElementsByClassName('monthChart')[0]);
-    chart.draw(data, options);
-}
+            dChart.draw(data, options);
+        }
+
+        function drawWeekChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Category');
+            data.addColumn('number', 'Sums');
+            Object.keys(weekData).forEach(function(key) {
+                data.addRow([ key, weekData[key] ]);
+            });
+            var options = {
+                is3D: true,
+                'width':700,
+                'height':400,
+            };
+            var wChart = new google.visualization.PieChart(document
+                    .getElementById('weekChart'));
+            wChart.draw(data, options);
+
+
+        }
+
+        function drawMonthChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Category');
+            data.addColumn('number', 'Sums');
+            Object.keys(monthData).forEach(function(key) {
+                data.addRow([ key, monthData[key] ]);
+            });
+            var options = {
+                is3D: true,
+                'width':700,
+                'height':400,
+            };
+            var mChart = new google.visualization.PieChart(document
+                    .getElementById('monthChart'));
+
+            mChart.draw(data, options);
+        }

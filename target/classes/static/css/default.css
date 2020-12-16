@@ -969,3 +969,10 @@ ul.contact li a.icon-rss:before
 .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
     width: 1200px;
 }
+
+.chart {
+    margin-left: auto;
+    margin-right: auto;
+    width:700px;
+    height: 400px;
+}
