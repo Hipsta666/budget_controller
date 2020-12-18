@@ -11,10 +11,12 @@
         <module name="budget_controller999" />
         <module name="budget_controller_DEL" />
         <module name="budget_controller" />
+        <module name="budget_controller_srart_v4" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="11">
       <module name="budget_controller_final_v_2" target="8" />
+      <module name="budget_controller_srart_v4" target="8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

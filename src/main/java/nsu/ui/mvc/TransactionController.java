@@ -106,6 +106,13 @@ public class TransactionController {
 		return mav;
 	}
 
+	@RequestMapping("/login")
+	public ModelAndView log() throws SQLException, ParseException {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("transactions/login");
+		return mav;
+	}
+
 
 	@RequestMapping("/statistics")
 	public ModelAndView statistics() throws SQLException, ParseException {
