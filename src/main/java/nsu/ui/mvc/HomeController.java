@@ -14,6 +14,6 @@ public class HomeController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String choice() {
-        return "layout";
+        return "transactions/home";
     }
 }

@@ -41,6 +41,11 @@ public class SampleWebUiApplication {
 	}
 
 	@Bean
+	public UserRepository userRepository() throws SQLException, ClassNotFoundException {
+		return new MySqlRepository();
+	}
+
+	@Bean
 	public Converter<String, Transaction> messageConverter() {
 		return new Converter<String, Transaction>() {
 			@Override

@@ -25,9 +25,13 @@ public interface TransactionRepository {
 
     ArrayList<String> getDates();
 
+    boolean checkDB(String dbName, String field, String value) throws SQLException;
+
     void updateTransaction(Transaction transaction) throws SQLException;
 
     void deleteTransaction(Long id) throws SQLException;
     Pair<Integer, HashMap<String, Integer>> getStatGroupedByDates(String groupBy) throws ParseException, SQLException;
+
+    User findUser();
 
 }

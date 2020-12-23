@@ -16,6 +16,7 @@ package nsu.ui.mvc;
 import nsu.ui.Category;
 import nsu.ui.Transaction;
 import nsu.ui.TransactionRepository;
+import nsu.ui.User;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,13 +42,15 @@ import java.util.TreeMap;
 @Controller
 @RequestMapping("/")
 public class TransactionController {
-	private final TransactionRepository transactionRepository;
+	private TransactionRepository transactionRepository;
 	private Long id;
+	private User user;
 
 	@Autowired
 	public TransactionController(TransactionRepository transactionRepository) {
 		this.transactionRepository = transactionRepository;
 	}
+
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public ModelAndView edit(@PathVariable("id") Transaction transaction) throws SQLException {
@@ -89,6 +92,9 @@ public class TransactionController {
 
 	@RequestMapping("/transactions")
 	public ModelAndView list() throws SQLException, ParseException {
+		if (!this.transactionRepository.checkDB("users", "user_login", " ")){
+			return new ModelAndView("redirect:/login");
+		}
 		HashMap<String, HashMap<String, ArrayList<Transaction>>> dateCategoryMap = this.transactionRepository.grouping();
 		ArrayList<Integer> daySums = this.transactionRepository.getDaySums();
 		HashMap<String, HashMap<String, Integer>> categorySums = this.transactionRepository.getCategorySums();
@@ -103,13 +109,6 @@ public class TransactionController {
 		mav.addObject("categorySums", categorySums);
 		mav.addObject("dates", dates);
 
-		return mav;
-	}
-
-	@RequestMapping("/login")
-	public ModelAndView log() throws SQLException, ParseException {
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("transactions/login");
 		return mav;
 	}
 

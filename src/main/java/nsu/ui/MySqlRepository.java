@@ -1,9 +1,5 @@
 package nsu.ui;
 
-
-
-
-
 import org.javatuples.Pair;
 
 import java.sql.*;
@@ -11,10 +7,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class MySqlRepository implements TransactionRepository, CategoryRepository {
+public class MySqlRepository implements TransactionRepository, CategoryRepository, UserRepository {
     public static final String url = "jdbc:mysql://localhost:3306/expense_controller?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     public static final String user = "root";
-    public static final String pwd = "Qazwsxqwerty123";
+    public static final String pwd = "";
 
     Statement state;
     Connection con;
@@ -106,6 +102,9 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         return category;
     }
 
+
+
+
     @Override
     public boolean checkDB(String dbName, String field, String value) throws SQLException {
         state = con.createStatement();
@@ -131,6 +130,8 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         state = con.createStatement();
         state.executeUpdate(String.format("INSERT into transactions (date,category_id,trans_name, amount) VALUES ('%s','%s','%s','%s');", date, id_category, name, amount));
     }
+
+
 
     @Override
     public Transaction findTransaction(Long id) throws SQLException {
@@ -330,5 +331,41 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
             }
         }
         return dateCategoryValue;
+    }
+
+    @Override
+    public User saveUser(User user) throws SQLException {
+        String name = user.getUserName();
+        String login = user.getUserLogin();
+        String password = user.getUserPassword();
+        Boolean current = true;
+
+        state = con.createStatement();
+        boolean categoryExistence = checkDB("users", "user_login", String.valueOf(name));
+        if (!categoryExistence) {
+            state.executeUpdate(String.format("INSERT into `users`(user_name, user_login, password, current) VALUES ('%s','%s','%s','%s');", name,login,password,current));
+        }
+        return user;
+    }
+
+    @Override
+    public User findUser() {
+        User user = new User();
+        try {
+            state = con.createStatement();
+            ResultSet rsUser = state.executeQuery("select distinct * from users;");
+
+            while (rsUser.next()) {
+                user.setCurrent(rsUser.getBoolean(5));
+                user.setUserPassword(rsUser.getString(4));
+                user.setUserLogin(rsUser.getString(3));
+                user.setUserName(rsUser.getString(2));
+                user.setId(rsUser.getLong(1));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return user;
     }
 }
