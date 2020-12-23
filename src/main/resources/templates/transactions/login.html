@@ -54,6 +54,12 @@
                                         Validation error
                                     </p>
                                 </div>
+                                <div th:if="${errorMessageLog}" style="display: block;text-align: center;">
+                                    <p>Логина нет. Зарегайтесь!</p>
+                                </div>
+                                <div th:if="${errorMessagePas}" style="display: block;text-align: center;">
+                                    <p>Неверный пароль!</p>
+                                </div>
 
                                 <input name="userLogin" placeholder="Логин" type="text"
                                        th:field="*{userLogin}"
@@ -90,6 +96,10 @@
                                        th:text="${error}">
                                         Validation error
                                     </p>
+                                </div>
+
+                                <div th:if="${errorMessage}" style="display: block;text-align: center;">
+                                    <p>Логин уже есть.</p>
                                 </div>
                                 <input name="userLogin" placeholder="Логин" type="text"
                                        th:field="*{userLogin}"

@@ -8,7 +8,10 @@ public interface UserRepository {
 
     boolean checkDB(String dbName, String field, String value) throws SQLException;
 
-    User findUser();
+    User findUser(String login);
 
+    void setGlobalUserId(Long user_id);
+
+    String getPassword(String login);
     // void deleteUsers(String user) throws SQLException;
 }

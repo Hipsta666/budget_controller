@@ -10,32 +10,33 @@
   </head>
   <body>
     <div>
-
       <div id="header-wrapper">
         <div id="header" class="container2">
           <div id="logo">
             <h1><a href="https://nsu.ru">NSU</a></h1>
+            <h2 th:text="${userName}"></h2>
+            <h2 th:text="${userLogin}"></h2>
           </div>
           <div id="menu">
             <ul>
 
               <li>
-                <a th:href="@{/create}" class="active">
+                <a th:href="@{'/create' + '/' + ${userLogin}}" class="active">
                   Добавить транзакцию
                 </a>
               </li>
               <li>
-                <a th:href="@{/transactions}" class="active">
+                <a th:href="@{'/transactions' + '/' + ${userLogin}}" class="active">
                   Транзакции
                 </a>
               </li>
               <li>
-                <a th:href="@{/statistics}" class="active">
+                <a th:href="@{'/statistics' + '/' + ${userLogin}}" class="active">
                   Статистика
                 </a>
               </li>
               <li>
-                <a th:href="@{/categories}" class="active">
+                <a th:href="@{'/categories' + '/' + ${userLogin}}" class="active">
                   Категории
                 </a>
               </li>

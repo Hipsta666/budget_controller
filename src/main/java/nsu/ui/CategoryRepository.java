@@ -11,4 +11,10 @@ public interface CategoryRepository {
     ArrayList<Category> findCategories();
 
     void deleteCategory(String category) throws SQLException;
+
+    User findUser(String login);
+
+    void setGlobalUserId(Long user_id);
+
+    boolean checkDBint(String field, Integer value) throws SQLException;
 }

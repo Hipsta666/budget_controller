@@ -11,14 +11,14 @@ public class User {
     @NotEmpty(message = "Логин - обязательное поле.")
     private String userLogin;
 
-//    @NotEmpty(message = "Имя - обязательное поле.")
+    @NotEmpty(message = "Имя - обязательное поле.")
     private String userName;
 
     @NotEmpty(message = "Пароль - обязательное поле.")
     private String userPassword;
 
     @NotNull(message = "curr - обязательное поле.")
-    private Boolean current;
+    private int current;
 
     public String getUserLogin() {
         return userLogin;
@@ -52,11 +52,11 @@ public class User {
         this.id = id;
     }
 
-    public Boolean getCurrent() {
+    public int getCurrent() {
         return current;
     }
 
-    public void setCurrent(Boolean current) {
+    public void setCurrent(int current) {
         this.current = current;
     }
 }

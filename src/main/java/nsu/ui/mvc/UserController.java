@@ -33,8 +33,9 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView createUserForm(@ModelAttribute User user) {
-//        user.setUserName("ANDY");
-        user.setCurrent(true);
+        user.setUserName("User");
+
+        user.setCurrent(1);
         ModelAndView mav = new ModelAndView();
         mav.setViewName("transactions/login");
 //        mav.addObject("userName", user.getUserName());
@@ -55,9 +56,22 @@ public class UserController {
     @RequestMapping(value = "/log-error", method = RequestMethod.POST)
     public ModelAndView authUser(@Valid User user, BindingResult result,
                                        RedirectAttributes redirect) throws SQLException {
+        if (!user.getUserLogin().isEmpty() && !this.userRepository.checkDB("users", "user_login", user.getUserLogin())){
+            ModelAndView mav = new ModelAndView();
+            mav.setViewName("transactions/login");
+            mav.addObject("errorMessageLog", true);
+            return mav;
+        }
 
-        System.out.println(result.getAllErrors());
-        System.out.println(result.getFieldErrors());
+        if (user.getUserPassword().isEmpty() || !user.getUserPassword().equals(this.userRepository.getPassword(user.getUserLogin()))){
+            System.out.println(user.getUserPassword());
+            System.out.println(this.userRepository.getPassword(user.getUserLogin()));
+            ModelAndView mav = new ModelAndView();
+            mav.setViewName("transactions/login");
+            mav.addObject("errorMessagePas", true);
+            return mav;
+        }
+
         if (result.hasErrors()) {
 //            user.setUserName("ANDY");
             ModelAndView mav = new ModelAndView();
@@ -67,43 +81,30 @@ public class UserController {
             return mav;
         }
 
-        /*if (result.hasErrors() || this.userRepository.checkDB("users", "user_name", user.getUserName())) {
-            ModelAndView mav = new ModelAndView();
-            ArrayList<User> users = this.userRepository.findUsers();
-            ArrayList<String> names = new ArrayList<>();
 
-            for (User obj:users){
-                names.add(obj.getUserName());
-            }
-            Collections.reverse(names);
-
-            mav.setViewName("transactions/categories");
-            mav.addObject("formErrors", result.getAllErrors());
-            mav.addObject("categories", names);
-            if (!user.getUserName().isEmpty()) {
-                mav.addObject("state", "block");
-            }
-
-            return mav;
-        }*/
-
-        return new ModelAndView("redirect:/transactions");
+        return new ModelAndView("redirect:/transactions/" + user.getUserLogin());
     }
 
     @RequestMapping(value = "/reg-error", method = RequestMethod.POST)
     public ModelAndView registerUser(@Valid User user, BindingResult result,
                                    RedirectAttributes redirect) throws SQLException {
+        if (this.userRepository.checkDB("users", "user_login", user.getUserLogin())){
+            ModelAndView mav = new ModelAndView();
+            mav.setViewName("transactions/login");
+            mav.addObject("errorMessage", true);
+            return mav;
+        }
         if (result.hasErrors()) {
             ModelAndView mav = new ModelAndView();
             mav.setViewName("transactions/login");
             mav.addObject("formErrors", result.getAllErrors());
             mav.addObject("isReg", true);
+
             return mav;
         }
+        this.userRepository.saveUser(user);
 
-//        this.userRepository.saveUser(user);
-
-        return new ModelAndView("redirect:/transactions");
+        return new ModelAndView("redirect:/transactions/" + user.getUserLogin());
     }
 
 

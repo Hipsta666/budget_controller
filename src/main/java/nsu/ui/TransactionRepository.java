@@ -32,6 +32,9 @@ public interface TransactionRepository {
     void deleteTransaction(Long id) throws SQLException;
     Pair<Integer, HashMap<String, Integer>> getStatGroupedByDates(String groupBy) throws ParseException, SQLException;
 
-    User findUser();
+    User findUser(String login);
+
+    void setGlobalUserId(Long user_id);
+    boolean checkDBint(String field, Integer value) throws SQLException;
 
 }

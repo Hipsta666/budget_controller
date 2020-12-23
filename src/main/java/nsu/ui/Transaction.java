@@ -14,6 +14,8 @@ public class Transaction {
 
     private Long id;
 
+    private int user_id;
+
     @NotEmpty(message = "Дата - обязательное поле.")
     private String date;
 
@@ -22,7 +24,6 @@ public class Transaction {
 
     @NotEmpty(message = "Название - обязательное поле.")
     private String trans_name;
-
 
     @NotNull(message = "Сумма - обязательное поле.")
     private int amount;
@@ -72,4 +73,11 @@ public class Transaction {
     }
 
 
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
 }

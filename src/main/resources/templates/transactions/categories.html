@@ -23,7 +23,7 @@
 <div layout:fragment="content"
      class="container">
     <form id="categories"
-          th:action="@{/categories}"
+          th:action="@{'/categories' + '/' + ${userLogin}}"
           th:object="${category}"
           action="#"
           method="post">
@@ -43,13 +43,16 @@
         <input type="text"
                th:field="*{categoryName}"
                th:class="${#fields.hasErrors('categoryName')} ? 'field-error'"/>
+        <input type="hidden"
+               th:field="*{user_id}"
+               th:class="${#fields.hasErrors('categoryName')} ? 'field-error'"/>
         <div class="form-actions">
             <input class="button" type="submit" value="Добавить"/>
         </div>
     </form>
     <div class="prokrutka">
         <div th:each="category,state : ${categories}">
-            <form th:action="@{'/categories/delete_category/' + ${category}}"
+            <form th:action="@{'/categories/delete_category/' + ${category} + '/' + ${userLogin}}"
                   method="post">
                 <span th:text="${categories.size() - state.count + 1}" style="float: left; width:18px;"></span>
                 <div class="form-action">

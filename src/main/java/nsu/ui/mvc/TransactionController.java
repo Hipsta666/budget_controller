@@ -44,7 +44,7 @@ import java.util.TreeMap;
 public class TransactionController {
 	private TransactionRepository transactionRepository;
 	private Long id;
-	private User user;
+	private User user = new User();
 
 	@Autowired
 	public TransactionController(TransactionRepository transactionRepository) {
@@ -90,31 +90,34 @@ public class TransactionController {
 	}
 
 
-	@RequestMapping("/transactions")
-	public ModelAndView list() throws SQLException, ParseException {
-//		if (!this.transactionRepository.checkDB("users", "user_login", " ")){
-//			return new ModelAndView("redirect:/login");
-//		}
+	@RequestMapping("/transactions/{userLogin}")
+	public ModelAndView list(@PathVariable("userLogin") String userLogin) throws SQLException, ParseException {
+		this.user = this.transactionRepository.findUser(userLogin);
+		this.transactionRepository.setGlobalUserId(user.getId());
 		HashMap<String, HashMap<String, ArrayList<Transaction>>> dateCategoryMap = this.transactionRepository.grouping();
 		ArrayList<Integer> daySums = this.transactionRepository.getDaySums();
 		HashMap<String, HashMap<String, Integer>> categorySums = this.transactionRepository.getCategorySums();
 		ArrayList<String> dates = this.transactionRepository.getDates();
 
 		ModelAndView mav = new ModelAndView();
-
+		//System.out.println(user.getUserLogin());
+		//System.out.println(user.getUserName());
 
 		mav.setViewName("transactions/list");
 		mav.addObject("daySums", daySums);
 		mav.addObject("dateCategoryMap", dateCategoryMap);
 		mav.addObject("categorySums", categorySums);
 		mav.addObject("dates", dates);
+		mav.addObject("user", user);
 
 		return mav;
 	}
 
 
-	@RequestMapping("/statistics")
-	public ModelAndView statistics() throws SQLException, ParseException {
+	@RequestMapping("/statistics/{userLogin}")
+	public ModelAndView statistics(@PathVariable("userLogin") String userLogin) throws SQLException, ParseException {
+		this.user = this.transactionRepository.findUser(userLogin);
+		this.transactionRepository.setGlobalUserId(user.getId());
 		HashMap<String, HashMap<String, ArrayList<Transaction>>> dateCategoryMap = this.transactionRepository.grouping();
 		Pair<Integer, HashMap<String, Integer>> dayGroup = this.transactionRepository.getStatGroupedByDates("d");
 		Pair<Integer, HashMap<String, Integer>> weekGroup = this.transactionRepository.getStatGroupedByDates("w");
@@ -152,8 +155,10 @@ public class TransactionController {
 	}
 
 
-	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public ModelAndView createTransactionForm(@ModelAttribute Transaction transaction) throws SQLException {
+	@RequestMapping(value = "/create/{userLogin}", method = RequestMethod.GET)
+	public ModelAndView createTransactionForm(@PathVariable("userLogin") String userLogin, @ModelAttribute Transaction transaction) throws SQLException {
+		this.user = this.transactionRepository.findUser(userLogin);
+		this.transactionRepository.setGlobalUserId(user.getId());
 		ArrayList<Category> categories = this.transactionRepository.findCategories();
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("transactions/create");

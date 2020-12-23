@@ -11,6 +11,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     public static final String url = "jdbc:mysql://localhost:3306/expense_controller?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     public static final String user = "root";
     public static final String pwd = "Qazwsxqwerty123";
+    private Long user_id;
 
     Statement state;
     Connection con;
@@ -20,6 +21,10 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         con = DriverManager.getConnection(url, user, pwd);
     }
 
+    @Override
+    public void setGlobalUserId(Long user_id){
+        this.user_id = user_id;
+    }
 
     @Override
     public HashMap<String, HashMap<String, ArrayList<Transaction>>> grouping() throws SQLException, ParseException {
@@ -94,10 +99,13 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     @Override
     public Category saveCategory(Category category) throws SQLException {
         String name = category.getCategoryName();
+        int o = category.getUser_id().intValue();
         state = con.createStatement();
-        boolean categoryExistence = checkDB("categories", "category_name", String.valueOf(name));
-        if (!categoryExistence) {
-            state.executeUpdate(String.format("INSERT into `categories`(category_name) VALUES ('%s');", name));
+        boolean categoryExistenceName = checkDB("categories", "category_name", String.valueOf(name));
+        boolean categoryExistenceId = checkDBint( category.getCategoryName(), user_id.intValue());
+
+        if (!categoryExistenceId) {
+            state.executeUpdate(String.format("INSERT into `categories`(category_name, user_id) VALUES ('%s','%s');", name, o));
         }
         return category;
     }
@@ -110,6 +118,20 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         state = con.createStatement();
 
         ResultSet rs = state.executeQuery(String.format("SELECT EXISTS(SELECT id FROM `%s` WHERE LOWER(%s) = LOWER('%s'));", dbName, field, value));
+        while (rs.next()) {
+            if (rs.getString(1).equals("0")) {
+                rs.close();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean checkDBint(String field, Integer value) throws SQLException {
+        state = con.createStatement();
+//select * from categories where user_id = 15 and category_name = 'auto';
+        ResultSet rs = state.executeQuery(String.format("SELECT EXISTS(select * from categories where user_id = %s and category_name = lower('%s'));", value, field));
         while (rs.next()) {
             if (rs.getString(1).equals("0")) {
                 rs.close();
@@ -155,13 +177,17 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     public ArrayList<Category> findCategories() {
         ArrayList<Category> categories = new ArrayList<Category>();
         try {
+            System.out.println(user_id);
             state = con.createStatement();
-            ResultSet rsCategory = state.executeQuery("select distinct * from categories;");
+            int o = user_id.intValue();
+            System.out.println(o);
+            ResultSet rsCategory = state.executeQuery("select distinct * from categories where user_id = " + o + ";");
 
             while (rsCategory.next()) {
                 Category category = new Category();
 
-                category.setCategoryName(rsCategory.getString(2));
+                category.setCategoryName(rsCategory.getString(3));
+                category.setUser_id(rsCategory.getLong(2));
                 category.setId(rsCategory.getLong(1));
 
                 categories.add(category);
@@ -235,7 +261,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
 
     @Override
     public void deleteCategory(String category) throws SQLException {
-        state.executeUpdate("delete from categories where category_name='" + category + "';");
+        state.executeUpdate("delete from categories where category_name='" + category + "' and user_id = " + user_id + ";");
     }
 
 
@@ -338,25 +364,28 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         String name = user.getUserName();
         String login = user.getUserLogin();
         String password = user.getUserPassword();
-        Boolean current = true;
+        int current = user.getCurrent();
 
         state = con.createStatement();
         boolean categoryExistence = checkDB("users", "user_login", String.valueOf(name));
         if (!categoryExistence) {
-            state.executeUpdate(String.format("INSERT into `users`(user_name, user_login, password, current) VALUES ('%s','%s','%s','%s');", name,login,password,current));
+            state.executeUpdate(String.format("INSERT into `users`(user_name, user_login, password, current) VALUES ('%s','%s','%s','%s');", name,login,password,1));
         }
         return user;
     }
 
+
+
+
     @Override
-    public User findUser() {
+    public User findUser(String login) {
         User user = new User();
         try {
             state = con.createStatement();
-            ResultSet rsUser = state.executeQuery("select distinct * from users;");
+            ResultSet rsUser = state.executeQuery("select * from users where user_login = '" + login + "';");
 
             while (rsUser.next()) {
-                user.setCurrent(rsUser.getBoolean(5));
+                user.setCurrent(rsUser.getInt(5));
                 user.setUserPassword(rsUser.getString(4));
                 user.setUserLogin(rsUser.getString(3));
                 user.setUserName(rsUser.getString(2));
@@ -367,5 +396,22 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         }
 
         return user;
+    }
+
+    @Override
+    public String getPassword(String login) {
+        String password = null;
+        try {
+            state = con.createStatement();
+            ResultSet rsUser = state.executeQuery("select password from users where user_login = '" + login + "';");
+
+            while (rsUser.next()) {
+                password = rsUser.getString(1);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return password;
     }
 }
