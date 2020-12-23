@@ -2,6 +2,7 @@ package nsu.ui.mvc;
 
 import javax.validation.Valid;
 
+import nsu.ui.Category;
 import nsu.ui.User;
 import nsu.ui.UserRepository;
 import nsu.ui.Transaction;
@@ -32,15 +33,40 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView createUserForm(@ModelAttribute User user) {
+//        user.setUserName("ANDY");
+        user.setCurrent(true);
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("transactions/login");
+//        mav.addObject("userName", user.getUserName());
 
-
-        return new ModelAndView("transactions/login");
+        return mav;
     }
-
-    @RequestMapping(method = RequestMethod.POST)
-    public ModelAndView createUser(@Valid User user, BindingResult result,
+//    public ModelAndView createTransaction(@Valid Transaction transaction, BindingResult result,
+//                                          RedirectAttributes redirect) throws SQLException {
+//
+//        if (result.hasErrors()) {
+//            ArrayList<Category> categories = this.transactionRepository.findCategories();
+//            ModelAndView mav = new ModelAndView();
+//            mav.setViewName("transactions/create");
+//            mav.addObject("categories", categories);
+//            mav.addObject("formErrors", result.getAllErrors());
+//            return mav;
+//        }
+    @RequestMapping(value = "/log-error", method = RequestMethod.POST)
+    public ModelAndView authUser(@Valid User user, BindingResult result,
                                        RedirectAttributes redirect) throws SQLException {
-        System.out.println(user.getUserName());
+
+        System.out.println(result.getAllErrors());
+        System.out.println(result.getFieldErrors());
+        if (result.hasErrors()) {
+//            user.setUserName("ANDY");
+            ModelAndView mav = new ModelAndView();
+            mav.setViewName("transactions/login");
+            mav.addObject("formErrors", result.getAllErrors());
+            mav.addObject("isReg", true);
+            return mav;
+        }
+
         /*if (result.hasErrors() || this.userRepository.checkDB("users", "user_name", user.getUserName())) {
             ModelAndView mav = new ModelAndView();
             ArrayList<User> users = this.userRepository.findUsers();
@@ -61,9 +87,23 @@ public class UserController {
             return mav;
         }*/
 
-        this.userRepository.saveUser(user);
-        return new ModelAndView("redirect:/login","formErrors", result.getAllErrors());
+        return new ModelAndView("redirect:/transactions");
+    }
 
+    @RequestMapping(value = "/reg-error", method = RequestMethod.POST)
+    public ModelAndView registerUser(@Valid User user, BindingResult result,
+                                   RedirectAttributes redirect) throws SQLException {
+        if (result.hasErrors()) {
+            ModelAndView mav = new ModelAndView();
+            mav.setViewName("transactions/login");
+            mav.addObject("formErrors", result.getAllErrors());
+            mav.addObject("isReg", true);
+            return mav;
+        }
+
+//        this.userRepository.saveUser(user);
+
+        return new ModelAndView("redirect:/transactions");
     }
 
 

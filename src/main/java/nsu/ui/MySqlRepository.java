@@ -10,7 +10,7 @@ import java.util.*;
 public class MySqlRepository implements TransactionRepository, CategoryRepository, UserRepository {
     public static final String url = "jdbc:mysql://localhost:3306/expense_controller?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     public static final String user = "root";
-    public static final String pwd = "";
+    public static final String pwd = "Qazwsxqwerty123";
 
     Statement state;
     Connection con;

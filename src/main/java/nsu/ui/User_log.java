@@ -4,15 +4,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 
-public class User {
+public class User_log {
 
     private Long id;
 
     @NotEmpty(message = "Логин - обязательное поле.")
     private String userLogin;
-
-//    @NotEmpty(message = "Имя - обязательное поле.")
-    private String userName;
 
     @NotEmpty(message = "Пароль - обязательное поле.")
     private String userPassword;
@@ -26,14 +23,6 @@ public class User {
 
     public void setUserLogin(String userLogin) {
         this.userLogin = userLogin;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getUserPassword() {

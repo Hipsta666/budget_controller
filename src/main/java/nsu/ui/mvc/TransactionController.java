@@ -92,9 +92,9 @@ public class TransactionController {
 
 	@RequestMapping("/transactions")
 	public ModelAndView list() throws SQLException, ParseException {
-		if (!this.transactionRepository.checkDB("users", "user_login", " ")){
-			return new ModelAndView("redirect:/login");
-		}
+//		if (!this.transactionRepository.checkDB("users", "user_login", " ")){
+//			return new ModelAndView("redirect:/login");
+//		}
 		HashMap<String, HashMap<String, ArrayList<Transaction>>> dateCategoryMap = this.transactionRepository.grouping();
 		ArrayList<Integer> daySums = this.transactionRepository.getDaySums();
 		HashMap<String, HashMap<String, Integer>> categorySums = this.transactionRepository.getCategorySums();

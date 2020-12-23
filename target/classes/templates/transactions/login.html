@@ -38,25 +38,75 @@
                     </div>
                 </div>
             </div>
+<!--            th:style ="${isReg} ? 'left: 265px;' : 'left: 0px;' "-->
             <div class="container-form">
                 <div class="form-item log-in">
                     <div class="table">
                         <div class="table-cell">
-                            <form th:action="@{/login/log}" method="post">
-                                <input name="Username" placeholder="Имя" type="text" />
-                                <input name="Пароль" placeholder="Пароль" type="Password" />
+                            <form th:action="@{/login/log-error}"
+                                  th:object="${user}"
+                                  method="post">
+                                <div th:if="${#fields.hasErrors('*')}"
+                                     class="alert alert-error"
+                                     style="text-align: center;">
+                                    <p th:each="error : ${#fields.errors('*')}"
+                                       th:text="${error}">
+                                        Validation error
+                                    </p>
+                                </div>
+
+                                <input name="userLogin" placeholder="Логин" type="text"
+                                       th:field="*{userLogin}"
+                                       th:class="${#fields.hasErrors('userLogin')} ? 'field-error'"/>
+
+                                <input name="userPassword" placeholder="Пароль" type="Password"
+                                       th:field="*{userPassword}"
+                                       th:class="${#fields.hasErrors('userPassword')} ? 'field-error'"/>
+
+                                <input name="current" placeholder="Имя" type="hidden"
+                                       th:field="*{current}"
+                                       th:class="${#fields.hasErrors('current')} ? 'field-error'"/>
+
+                                <input name="userName" placeholder="Имя" type="hidden"
+                                th:field="*{userName}"
+                                th:class="${#fields.hasErrors('userName')} ? 'field-error'"/>
+
                                 <input class="btn" type="submit" value="Войти"/>
                             </form>
                         </div>
                     </div>
                 </div>
+
                 <div class="form-item sign-up">
                     <div class="table">
                         <div class="table-cell">
-                            <form th:action="@{/login/reg}" method="post">
-                                <input name="email" placeholder="Логин" type="text" />
-                                <input name="Username" placeholder="Имя" type="text" />
-                                <input name="Password" placeholder="Пароль" type="Password" />
+                            <form th:action="@{/login/reg-error}"
+                                  th:object="${user}"
+                                  method="post">
+                                <div th:if="${#fields.hasErrors('*')}"
+                                     class="alert alert-error"
+                                     style="text-align: center;">
+                                    <p th:each="error : ${#fields.errors('*')}"
+                                       th:text="${error}">
+                                        Validation error
+                                    </p>
+                                </div>
+                                <input name="userLogin" placeholder="Логин" type="text"
+                                       th:field="*{userLogin}"
+                                       th:class="${#fields.hasErrors('userLogin')} ? 'field-error'"/>
+
+                                <input name="userName" placeholder="Имя"
+                                       th:field="*{userName}"
+                                       th:class="${#fields.hasErrors('userName')} ? 'field-error'"/>
+
+                                <input name="userPassword" placeholder="Пароль" type="Password"
+                                       th:field="*{userPassword}"
+                                       th:class="${#fields.hasErrors('userPassword')} ? 'field-error'"/>
+
+                                <input name="current" placeholder="Имя" type="hidden"
+                                       th:field="*{current}"
+                                       th:class="${#fields.hasErrors('current')} ? 'field-error'"/>
+
                                 <input class="btn" type="submit" value="Зарегистрироваться"/>
                             </form>
                         </div>
@@ -69,7 +119,19 @@
         $(".info-item .btn").click(function () {
           $(".container").toggleClass("log-in");
         });
-        $(".container-form .btn").click(function () {
+
+
+
+        $(function ($) {
+        var location = window.location.href;
+        var cur_url = '/' + location.split('/').pop();
+
+
+        if (cur_url == "/reg-error") {
+            $(".container").toggleClass("log-in");
+        }
+    });
+    $(".container-form .btn").click(function () {
           $(".container").addClass("active");
         });
     </script>
