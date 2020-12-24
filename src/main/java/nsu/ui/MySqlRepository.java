@@ -10,7 +10,7 @@ import java.util.*;
 public class MySqlRepository implements TransactionRepository, CategoryRepository, UserRepository {
     public static final String url = "jdbc:mysql://localhost:3306/expense_controller?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     public static final String user = "root";
-    public static final String pwd = "Qazwsxqwerty123";
+    public static final String pwd = "";
     private Long user_id;
 
     Statement state;
@@ -75,7 +75,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     @Override
     public HashMap<String, HashMap<String, Integer>> getCategorySums() throws SQLException {
         state = con.createStatement();
-
+        int o = user_id.intValue();
 
         ArrayList<Category> categories = findCategories();
         HashMap<String, HashMap<String, Integer>> categorySums = new HashMap<>();
@@ -83,7 +83,7 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
             HashMap<String, Integer> sums = new HashMap<>();
             for (Category category : categories) {
 
-                ResultSet sum = state.executeQuery("select sum(transactions.amount) from transactions, categories where categories.id = transactions.category_id and transactions.date = '" + date + "' and categories.category_name='" + category.getCategoryName() + "';");
+                ResultSet sum = state.executeQuery("select sum(transactions.amount) from transactions, categories where categories.id = transactions.category_id and transactions.date = '" + date + "' and categories.category_name='" + category.getCategoryName() + "' and transactions.user_id ="+ o +";");
                 while (sum.next()) {
                     sums.put(category.getCategoryName(), sum.getInt(1));
                 }
@@ -150,7 +150,8 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
         Long id_category = transaction.getCategory_id();
 
         state = con.createStatement();
-        state.executeUpdate(String.format("INSERT into transactions (date,category_id,trans_name, amount) VALUES ('%s','%s','%s','%s');", date, id_category, name, amount));
+        int o = user_id.intValue();
+        state.executeUpdate(String.format("INSERT into transactions (date,user_id,category_id,trans_name, amount) VALUES ('%s','%s','%s','%s', %s);", date, o, id_category, name, amount));
     }
 
 
@@ -159,7 +160,8 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     public Transaction findTransaction(Long id) throws SQLException {
         Transaction transaction = new Transaction();
         state = con.createStatement();
-        ResultSet rs = state.executeQuery("select * from transactions where id=" + id + ";");
+        int o = user_id.intValue();
+        ResultSet rs = state.executeQuery("select * from transactions where id=" + id +" and user_id ="+ o + ";");
 
         while (rs.next()) {
             transaction.setId(rs.getLong(1));
@@ -225,12 +227,12 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
 
     @Override
     public ArrayList<String> getDates() {
-
+        int o = user_id.intValue();
         ArrayList<String> dates = new ArrayList<String>();
         try {
             state = con.createStatement();
 
-            ResultSet rsDates = state.executeQuery("select distinct date from transactions;");
+            ResultSet rsDates = state.executeQuery("select distinct date from transactions where user_id = "+ o +";");
             while (rsDates.next()) {
                 dates.add(rsDates.getString(1));
             }
@@ -249,14 +251,15 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
 
     @Override
     public void updateTransaction(Transaction transaction) throws SQLException {
-
+        int o = user_id.intValue();
         state.executeUpdate("update transactions set date='" + transaction.getDate() + "', category_id='" + transaction.getCategory_id() + "'," +
-                " trans_name='" + transaction.getTrans_name() + "', amount=" + transaction.getAmount() + " where id=" + transaction.getId() + ";");
+                " trans_name='" + transaction.getTrans_name() + "', amount=" + transaction.getAmount() + " where id=" + transaction.getId() + " and user_id = "+o+";");
     }
 
     @Override
     public void deleteTransaction(Long id) throws SQLException {
-        state.executeUpdate("delete from transactions where id=" + id + ";");
+        int o = user_id.intValue();
+        state.executeUpdate("delete from transactions where id=" + id + " and user_id = "+o+";");
     }
 
     @Override
@@ -342,9 +345,10 @@ public class MySqlRepository implements TransactionRepository, CategoryRepositor
     }
 
     public HashMap<String, HashMap<String, Integer>> getGroupedCategoriesByValue() throws SQLException {
+        int o = user_id.intValue();
         HashMap<String, HashMap<String, Integer>> dateCategoryValue = new HashMap<>();
         HashMap<String, Integer> categoryValue = new HashMap<>();
-        ResultSet rsDates = state.executeQuery("select categories.category_name, sum(transactions.amount), transactions.date from transactions, categories where amount < 0 and transactions.category_id = categories.id group by category_name, date;");
+        ResultSet rsDates = state.executeQuery("select categories.category_name, sum(transactions.amount), transactions.date from transactions, categories where amount < 0 and transactions.category_id = categories.id and transactions.user_id = "+ o +" group by category_name, date;");
         while (rsDates.next()) {
             if (dateCategoryValue.containsKey(rsDates.getString(3))){
                 dateCategoryValue.get(rsDates.getString(3)).put(rsDates.getString(1), rsDates.getInt(2));

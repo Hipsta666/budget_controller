@@ -103,6 +103,12 @@ public class TransactionController {
 		//System.out.println(user.getUserLogin());
 		//System.out.println(user.getUserName());
 
+		System.out.println(daySums);
+		System.out.println(dateCategoryMap);
+		System.out.println(categorySums);
+		System.out.println(dates);
+		System.out.println(user);
+
 		mav.setViewName("transactions/list");
 		mav.addObject("daySums", daySums);
 		mav.addObject("dateCategoryMap", dateCategoryMap);
@@ -168,8 +174,8 @@ public class TransactionController {
 
 
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public ModelAndView createTransaction(@Valid Transaction transaction, BindingResult result,
+	@RequestMapping(value = "/create/{userLogin}", method = RequestMethod.POST)
+	public ModelAndView createTransaction(@PathVariable("userLogin") String userLogin, @Valid Transaction transaction, BindingResult result,
 										  RedirectAttributes redirect) throws SQLException {
 
 		if (result.hasErrors()) {
@@ -183,7 +189,7 @@ public class TransactionController {
 
 		this.transactionRepository.saveTransaction(transaction);
 
-		return new ModelAndView("redirect:/transactions");
+		return new ModelAndView("redirect:/transactions/"+ userLogin);
 
 	}
 

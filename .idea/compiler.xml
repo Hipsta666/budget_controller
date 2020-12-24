@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="budget_controller_rus" />
         <module name="budget_controller_final_v_2" />
+        <module name="budget_controller_exp" />
         <module name="budget_controller_DEL" />
         <module name="budget_controller" />
         <module name="budget_controller999" />
@@ -17,6 +18,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel target="11">
       <module name="budget_controller_4" target="8" />
+      <module name="budget_controller_exp" target="8" />
       <module name="budget_controller_final_v_2" target="8" />
       <module name="budget_controller_srart_v4" target="8" />
     </bytecodeTargetLevel>
